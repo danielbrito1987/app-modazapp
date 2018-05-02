@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+            </button>      
+        </ion-buttons>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <div *ngFor="let msg of mensagens" [attr.class]="msg.isWatson ? 'msgWatson' : 'msgUsuario'">
+        <p class="msgRemetente">{{msg.isWatson ? 'Zack:' : 'Você:'}}</p>
+        <p class="msgEnviada">{{msg.mensagem}}</p>
+    </div>
+</ion-content>
+  
+<ion-footer>
+    <ion-toolbar>
+        <ion-input type="text" placeholder="Digite sua mensagem..." [(ngModel)]="mensagem"></ion-input>
+        <ion-buttons end>
+            <button ion-button large color="secondary" (click)="enviarMensagem(mensagem)">
+                <ion-icon ios="ios-send" md="md-send"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

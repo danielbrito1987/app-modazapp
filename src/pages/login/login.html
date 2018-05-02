@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>            
+        <ion-buttons end>
+            <button ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon name="md-lock"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+    
+    <ion-content>   
+        <div [formGroup]="form">
+            <ion-list>
+                <ion-item>
+                    <ion-label color="secondary" style="color: #1ABC9C;" floating>Usuario</ion-label>
+                    <ion-input formControlName="Login" type="email"></ion-input>
+                </ion-item>
+            
+                <ion-item>
+                    <ion-label color="secondary" style="color: #1ABC9C;" floating>Senha</ion-label>
+                    <ion-input formControlName="Senha" type="password"></ion-input>
+                </ion-item>
+            </ion-list>   
+        </div>
+        <div padding>
+            <button ion-button color="secondary" block (click)="Login();">Entrar</button>
+        </div>
+        <div padding>
+            <button ion-button color="secondary" block (click)="goCadastroPage();">Cadastre-se</button>
+        </div>
+        <!-- <div padding>
+            <button ion-button color="secondary" block (click)="EsqueciSenha(Login.value);">Esqueci minha senha</button>
+        </div> -->
+    </ion-content>

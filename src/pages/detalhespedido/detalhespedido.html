@@ -1,0 +1,98 @@
+<ion-header>
+        <ion-navbar color="primary">
+            <div style="text-align:center">
+            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+            </div>
+            <ion-title></ion-title>
+            <ion-buttons end>
+                <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                    <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+                </button>      
+            </ion-buttons>
+            <ion-buttons end>
+                <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                    <ion-icon ios="ios-person" md="md-person"></ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-navbar>
+    </ion-header>
+    
+    <ion-content>
+        <ion-fab right bottom *ngIf="validaLogin()">
+            <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+            <ion-fab-list side="top">
+              <button ion-fab [navPush]="carrinhoPage">
+                <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+                <ion-label>Carrinho</ion-label>
+              </button>
+              <button ion-fab (click)="goPedidosPage();">
+                <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+                <ion-label>Pedidos</ion-label>
+              </button>
+              <button ion-fab (click)="goCamera()">
+                <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+                <ion-label>Comprovante</ion-label>
+              </button>
+              <button ion-fab (click)="logoff()">
+                <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+                <ion-label>Sair</ion-label>
+              </button>
+            </ion-fab-list>
+        </ion-fab>
+    
+        <h5 text-center>{{ codPedido }}</h5>
+        
+        <ion-card *ngFor="let item2 of lojas">
+            <ion-item-divider color="light">           
+                <ion-row>
+                    <ion-col>{{ item2.nomeLoja }}</ion-col>
+                    <ion-col>
+                        <ion-badge *ngIf="item2.status == 'Aberto'" color="warning"> {{ item2.status }} </ion-badge>
+                        <ion-badge *ngIf="item2.status == 'Concluido'" color="secondary"> {{ item2.status }} </ion-badge>
+                        <ion-badge *ngIf="item2.status == 'Rejeitado'" color="danger"> {{ item2.status }} </ion-badge>
+                        <ion-badge *ngIf="item2.status == 'Expedição'" color="azul"> {{ item2.status }} </ion-badge>
+                        <ion-badge *ngIf="item2.status == 'Entregue'" color="secondary"> {{ item2.status }} </ion-badge>
+                        <ion-badge *ngIf="item2.status == 'Aguardando Pagamento'" color="warning"> {{ item2.status }} </ion-badge>
+                    </ion-col>
+                </ion-row>     
+            </ion-item-divider>
+            <ion-item-group *ngFor="let item of items">                
+                <ion-item *ngIf="item.IdLoja == item2.idLoja">                    
+                    <h2>{{ item.DescProduto }}</h2>
+                    <ion-row>
+                        <ion-col *ngIf="item.QtdPedidoP > 0">
+                            <p>Qtd P: {{ item.QtdPedidoP }}</p>
+                        </ion-col>
+                        <ion-col *ngIf="item.QtdPedidoM > 0">
+                            <p>Qtd M: {{ item.QtdPedidoM }}</p>
+                        </ion-col>
+                        <ion-col *ngIf="item.QtdPedidoG > 0">
+                            <p>Qtd G: {{ item.QtdPedidoG }}</p>
+                        </ion-col>
+                        <ion-col *ngIf="item.QtdPedidoGG > 0">
+                            <p>Qtd GG: {{ item.QtdPedidoGG }}</p>
+                        </ion-col>
+                        <ion-col *ngIf="item.QtdPedidoXG > 0">
+                            <p>Qtd XG: {{ item.QtdPedidoXG }}</p>
+                        </ion-col>
+                        <ion-col *ngIf="item.QtdPedidoXGG > 0">
+                            <p>Qtd XGG: {{ item.QtdPedidoXGG }}</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <p>Valor Unit.: {{ item.ValorProduto | number : '1.2-2' }}</p>
+                        </ion-col>
+                        <ion-col>
+                            <p>Total: {{ item.ValorTotal | number : '1.2-2' }}</p>
+                        </ion-col>
+                    </ion-row>
+                </ion-item>
+            </ion-item-group>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <h2>Total do Pedido: {{ valorTotal() | number : '1.2-2' }}</h2>
+            </ion-item>
+        </ion-card>
+    </ion-content>

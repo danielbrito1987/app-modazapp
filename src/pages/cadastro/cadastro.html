@@ -1,0 +1,69 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+            </button>      
+        </ion-buttons>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div [formGroup]="form">
+        <ion-list>       
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;"floating>Pessoa Fís./Jur.</ion-label>
+                <ion-select [(ngModel)]="Tipo" formControlName="Tipo" cancelText="Cancelar" doneText="OK">
+                    <ion-option value="PF">Pessoa Física</ion-option>
+                    <ion-option value="PJ">Pessoa Jurídica</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label *ngIf="Tipo == 'PF'" color="secondary" style="color: #1ABC9C;" floating>Nome Completo</ion-label>
+                <ion-input *ngIf="Tipo == 'PF'" formControlName="Nome" type="text"></ion-input>
+                <ion-label *ngIf="Tipo == 'PJ'" color="secondary" style="color: #1ABC9C;" floating>Razão Social</ion-label>
+                <ion-input *ngIf="Tipo == 'PJ'" formControlName="Nome" type="text"></ion-input>
+            </ion-item>                
+            <ion-item *ngIf="Tipo == 'PF'">
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>Data de Nascimento</ion-label>
+                <ion-datetime formControlName="DataNasc" displayFormat="DD MM YYYY" cancelText="Cancelar" doneText="OK"></ion-datetime>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>E-mail</ion-label>
+                <ion-input formControlName="Email" type="email"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="Tipo == 'PF'">
+                <ion-label color="secondary" style="color: #1ABC9C;"floating>Sexo</ion-label>
+                <ion-select formControlName="Sexo" cancelText="Cancelar" doneText="OK">
+                    <ion-option value="M">Masculino</ion-option>
+                    <ion-option value="F">Feminino</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label *ngIf="Tipo == 'PF'" color="secondary" style="color: #1ABC9C;" floating>CPF</ion-label>
+                <ion-input *ngIf="Tipo == 'PF'" formControlName="CPF" type="tel" [brmasker]="{mask:'000.000.000-00', len:14}" (change)="validarCPF()"></ion-input>
+                <ion-label *ngIf="Tipo == 'PJ'" color="secondary" style="color: #1ABC9C;" floating>CNPJ</ion-label>
+                <ion-input *ngIf="Tipo == 'PJ'" formControlName="CNPJ" type="tel" [brmasker]="{mask:'00.000.000/0000-00', len:18}" (change)="validarCNPJ()"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>Senha</ion-label>
+                <ion-input formControlName="Senha" type="password"></ion-input>
+            </ion-item>
+        </ion-list>
+    </div>
+    <!-- <p>
+        <button ion-button color="secondary" block (click)="inserirUsuario();">Enviar</button>
+    </p> -->
+    <div padding>
+        <button ion-button color="secondary" block (click)="inserirUsuario();">Enviar</button>
+    </div>
+</ion-content>

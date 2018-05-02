@@ -1,0 +1,72 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+.tabs-md .tab-button[aria-selected=true] {
+    color: #fff; /*your  text color */
+    background: #17A98C; /* your background color*/
+}
+
+.alert-md .alert-button{
+    color: #1ABC9C;
+}
+
+.alert-md [aria-checked="true"] .alert-radio-icon{
+    border-color: #1ABC9C;
+}
+
+.alert-md [aria-checked="true"] .alert-radio-label{
+    color: #1ABC9C;
+}
+
+.alert-md .alert-message:empty{
+    display: none;
+}
+
+.loading-md .spinner-crescent circle{
+    stroke: #1ABC9C;
+}
+
+.picker-md .picker-button, .picker-md .picker-button.activated{
+    color: #1ABC9C;
+}
+
+.picker-md .picker-opt.picker-opt-selected{
+    color: #1ABC9C;
+}
+
+.statusbar{
+    background-color: #1ABC9C;
+}
+
+button[ion-fab] {
+  overflow: visible;
+  position: relative;
+
+  ion-label {
+      position: absolute;
+      text-align: right;
+      top: -8px;
+      right: 35px;
+      //left: 45px;
+
+      color: white;
+      background-color: rgba(0,0,0,0.7);
+      line-height: 24px;
+      padding: 4px 8px;
+      border-radius: 4px;
+  }
+}

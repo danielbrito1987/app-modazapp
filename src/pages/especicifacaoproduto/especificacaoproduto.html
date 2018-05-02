@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-navbar color="primary">
+      <div style="text-align:center">
+        <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+      </div>
+      <ion-title></ion-title>
+      <ion-buttons end>
+        <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+          <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+        </button>      
+      </ion-buttons>
+      <ion-buttons end>
+        <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+            <ion-icon ios="ios-person" md="md-person"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
+</ion-header>
+
+<ion-content class="card-page">
+    <ion-fab right bottom *ngIf="validaLogin()">
+        <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+        <ion-fab-list side="top">
+          <button ion-fab [navPush]="carrinhoPage">
+            <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            <ion-label>Carrinho</ion-label>
+          </button>
+          <button ion-fab (click)="goPedidosPage();">
+            <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+            <ion-label>Pedidos</ion-label>
+          </button>
+          <button ion-fab (click)="goCamera()">
+            <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+            <ion-label>Comprovante</ion-label>
+          </button>
+          <button ion-fab (click)="logoff()">
+            <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+            <ion-label>Sair</ion-label>
+          </button>
+        </ion-fab-list>
+    </ion-fab>
+  
+    <ion-list inset>
+      <ion-card *ngFor="let item of items">
+        <ion-card-content>
+            <p>Descrição Completa:</p>
+            <span class="large" [innerHTML]="item.DescricaoCompleta"></span>
+        </ion-card-content>
+        <ion-row style="padding-top:10px;">
+          <ion-col>
+            <button ion-button icon-left small (click)="goDetalhesPage()">
+              <ion-icon name="md-cart" color="secondary"></ion-icon>
+              <div><p color="secondary">Comprar</p></div>
+            </button>                      
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-list>
+</ion-content>

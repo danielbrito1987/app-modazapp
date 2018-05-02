@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+        <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+            </button>      
+        </ion-buttons>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
+</ion-header>
+
+<ion-content class="card-page">
+    <ion-list>
+        <ion-card *ngFor="let item of items">
+            <h2>Nome: {{ item.Nome }}</h2>
+            <h2>Email: {{ item.Email }}</h2>
+            <h2>CPF: {{ item.Cpf }}</h2>
+            <h2>Data Nasc.: {{ item.DataNasc | date: 'dd/MM/yyyy' }}</h2>
+        </ion-card>
+    </ion-list>
+</ion-content>
