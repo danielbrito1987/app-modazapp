@@ -26,6 +26,7 @@ export class PerfilPage{
             }else{
                 this.http.get('https://api.modazapp.online/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
                 //this.http.get('http://localhost:65417/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
+                    console.log(data);
                     this.items = data;
                     localStorage.setItem('Perfil', JSON.stringify(data));
                 }, (erro) => {
