@@ -6,6 +6,7 @@ import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { FeedbackPage } from '../feedback/feedback';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @Component({
     selector: 'page-checkout',
@@ -19,7 +20,7 @@ export class CheckoutPage{
     formaPgto: any;
     usuarioLogado: boolean;
 
-    constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, 
+    constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public localNotification: LocalNotifications,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
             this.contato = "";
             this.endereco = "";
@@ -41,6 +42,7 @@ export class CheckoutPage{
                 }else{
                     localStorage.setItem("CodPedido", "");
                     this.showToast("top", "Pedido Finalizado!");
+                    this.localNotification.clearAll();
                     this.loading.dismiss();
                     this.goRootPage();
                 }

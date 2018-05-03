@@ -9,7 +9,7 @@ import { FeedbackPage } from '../feedback/feedback';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { EspecificacaoProdutoPage } from '../especicifacaoproduto/especificacaoproduto';
 import { ProdutoProvider } from '../../providers/produto/produto';
-import * as moment from 'moment';
+//import * as moment from 'moment';
 
 @Component({
     selector: "page-detalhesProduto",
@@ -42,7 +42,7 @@ export class DetalhesProdutoPage{
     esconderDivXG: boolean;
     esconderDivXGG: boolean;
 
-    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, private localNotifications: LocalNotifications,
+    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public localNotification: LocalNotifications,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public produtosProvider: ProdutoProvider){            
             this.qtdP = 0;
             this.qtdM = 0;
@@ -334,7 +334,6 @@ export class DetalhesProdutoPage{
                     this.loading.dismiss();
                     this.goLoginPage();
                 }else{
-                    console.log(data);
                     this.idCarrinho = data["idCarrinho"];
 
                     if(localStorage.getItem('ExpirarCarrinho') == null || localStorage.getItem('ExpirarCarrinho') == "")
@@ -358,17 +357,16 @@ export class DetalhesProdutoPage{
     }
 
     agendarNotificacao(){
-        let dateobject = moment(this.dataRegistro).toDate();
         this.isAndroid = true;
         this.dataRegistro = new Date(new Date().getHours() + 1);
         localStorage.setItem('ExpirarCarrinho', this.dataRegistro);
-                
-        this.localNotifications.schedule({
-          id: 1,
-          title: 'Atenção',
-          sound: this.isAndroid ? 'file://sound.mp3': 'file://beep.caf',
-          text: 'Você tem mais 1 hora para finalizar o seu pedido.',
-          at: dateobject
+
+        this.localNotification.schedule({
+            id: 1,
+            title: 'Atenção',
+            sound: this.isAndroid ? 'file://sound.mp3' : 'file://beep.caf',
+            text: 'Você tem mais 1 hora para finalizar o seu pedido.',
+            trigger: { at: new Date(new Date(this.dataRegistro).getHours() + 1) }
         });
     }
 

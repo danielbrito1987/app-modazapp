@@ -7,7 +7,7 @@ import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { DetalhesProdutoPage } from '../detalhesproduto/detalhesproduto';
 import { FeedbackPage } from '../feedback/feedback';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+//import { LocalNotifications } from '@ionic-native/local-notifications';
 import { EspecificacaoProdutoPage } from '../especicifacaoproduto/especificacaoproduto';
 import { ProdutoProvider } from '../../providers/produto/produto';
 
@@ -33,7 +33,7 @@ export class ProdutosPage{
     usuarioLogado: boolean;
     tipoUsuario: any;
 
-    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, private localNotifications: LocalNotifications,
+    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public produtosProvider: ProdutoProvider){
             this.qtdP = 0;
             this.qtdM = 0;
@@ -57,73 +57,12 @@ export class ProdutosPage{
         this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
         //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{                
                 this.items = data;
-                console.log(this.items);
-                //localStorage.setItem('Produtos' + this.idLoja, JSON.stringify(data["DescricaoCompleta"]));
                 this.loading.dismiss();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
                 this.loading.dismiss();
                 this.goRootPage();
         });
-
-        // this.produtosProvider.get(this.idLoja)
-        // .then((result: any) =>{            
-        //     if(result != null){
-        //        this.items = result;
-        //        this.loading.dismiss();
-        //     }else{
-        //         this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
-        //         //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{                
-        //             this.items = data;
-        //             //localStorage.setItem('Produtos' + this.idLoja, JSON.stringify(data));
-        //             this.items.forEach(element => {    
-        //                 this.produtosProvider.insert(element); 
-        //             });
-        //             this.loading.dismiss();
-        //         }, (error) =>{
-        //             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
-        //             this.loading.dismiss();
-        //             this.goRootPage();
-        //         });
-        //     }
-        // });
-
-        // if(localStorage.getItem('Produtos' + this.idLoja) == "" || localStorage.getItem('Produtos' + this.idLoja) == null){
-        //     this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
-        //     //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{                
-        //         this.items = data;
-        //         //localStorage.setItem('Produtos' + this.idLoja, JSON.stringify(data));
-        //         let produto = new Produto();
-
-        //         produto.IdProduto = data["IdProduto"]; 
-        //         produto.Descricao = data["Descricao"]; 
-        //         produto.Valor = data["Valor"]; 
-        //         produto.Imagem = data["Imagem"]; 
-        //         produto.DataRegistro = data["DataRegistro"]; 
-        //         produto.IdLoja = data["IdLoja"];
-        //         produto.EstoqueP = data["EstoqueP"];
-        //         produto.EstoqueM = data["EstoqueM"];
-        //         produto.EstoqueG = data["EstoqueG"]; 
-        //         produto.EstoqueGG = data["EstoqueGG"];
-        //         produto.EstoqueXG = data["EstoqueXG"];
-        //         produto.EstoqueXGG = data["EstoqueXGG"];
-        //         produto.DescricaoCompleta = data["DescricaoCompleta"];
-        //         produto.ValorAtacado = data["ValorAtacado"]; 
-        //         produto.Slide1 = data["Slide1"];
-        //         produto.Slide2 = data["Slide2"];
-        //         produto.Slide3 = data["Slide3"];
-
-        //         this.produtosProvider.insert(produto);
-        //         this.loading.dismiss();
-        //     }, (error) =>{
-        //         this.showAlert('Erro', 'Falha na comunicação com o servidor.');
-        //         this.loading.dismiss();
-        //         this.goRootPage();
-        //     });
-        // }else{
-        //     this.items = JSON.parse(localStorage.getItem('Produtos' + this.idLoja));
-        //     this.loading.dismiss();
-        // }
     }
 
     getItems(ev:any){
@@ -220,12 +159,12 @@ export class ProdutosPage{
     }
 
     agendarNotificacao(){
-        this.localNotifications.schedule({
-          id: 1,
-          title: 'Atenção',
-          text: 'Tempo limite para finzalizar o seu carrinho está se aproximando.',
-          at: new Date(this.dataRegistro).getSeconds() + 5
-        });
+        // this.localNotifications.schedule({
+        //     id: 1,
+        //     title: 'Atenção',
+        //     text: 'Tempo limite para finalizar o seu carrinho está se aproximando.',
+        //     at: new Date(this.dataRegistro).getSeconds() + 5
+        // });
     }
 
     doRefresh(refresher) {
@@ -247,19 +186,6 @@ export class ProdutosPage{
           return false;
         }
     }
-
-    // maisQtd(): void{
-    //     this.qtd += 1;
-    // }
-
-    // menosQtd(): void{
-    //     if(this.qtd > 0){
-    //         this.qtd -= 1;
-    //     }
-    //     else{
-    //         this.qtd = 0;
-    //     }
-    // }
 
     showLoader(){    
         this.loading = this.loadingCtrl.create({

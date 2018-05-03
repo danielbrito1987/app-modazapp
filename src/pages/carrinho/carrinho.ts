@@ -48,6 +48,7 @@ export class CarrinhoPage{
                 this.goRootPage();
             });
         }else{
+            this.loading.dismiss();
             this.goLoginPage();
         }     
     }
@@ -111,7 +112,6 @@ export class CarrinhoPage{
     }
 
     removeItem(item: any){
-        console.log(item);
         this.http.get('http://api.modazapp.online/api/Carrinho/AtualizaCarrinho?id=' + item).subscribe(
             resp => this.getItems(),
             (err) => { this.showToast('top', 'Erro ao excluir o item do carrinho.' + '<br />' + err.message); console.log(err) }

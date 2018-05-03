@@ -30,7 +30,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
 // import { TooltipModule } from 'angular2-tooltips';
 import { Camera } from '@ionic-native/camera';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { ProdutoProvider } from '../providers/produto/produto';
@@ -43,15 +42,12 @@ import { SQLite } from '@ionic-native/sqlite';
 import { DatabaseProvider } from '../providers/database/database';
 import { LojasProvider } from '../providers/lojas/lojas';
 import { DatePicker } from '@ionic-native/date-picker';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-
-import { AutoHideDirective } from '../directives/auto-hide/auto-hide';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 @NgModule({
   declarations: [
     MyApp,
-    AutoHideDirective,
     AboutPage,
     ContactPage,
     HomePage,
@@ -107,7 +103,6 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
     {provide: ErrorHandler, useClass: IonicErrorHandler,},
     Camera,
     EmailComposer,
-    AndroidPermissions,
     ProdutoProvider,
     Base64,
     LocalNotifications,
@@ -117,7 +112,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
     DatabaseProvider,
     LojasProvider,
     DatePicker,
-    InAppBrowser,
+    AndroidPermissions,
     ScreenOrientation
   ]
 })

@@ -44,8 +44,6 @@ export class ChatPage {
                 that.mensagens.push(new Mensagem(response.output.text[0], true));
                 //that.tratarRetorno(response.output);
             }
-        }).catch(err => {
-            console.log("Erro: ", err.message);
         });
     }
 
@@ -75,8 +73,6 @@ export class ChatPage {
                     that.mensagens.push(new Mensagem(response.output.text[0], true));
                     //that.tratarRetorno(response.output);
                 }            
-            }).catch(err => {
-                console.log("Erro: ", err.mensage);
             });
 
             this.mensagem = "";

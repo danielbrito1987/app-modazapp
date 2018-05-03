@@ -34,9 +34,11 @@ export class CadastroPage {
         //this.http.post("http://localhost:65417/api/usuarios", this.form.value).subscribe(data =>{
             if(data["idUsuario"] != null){                
                 this.showAlert('Sucesso', 'Cadastro realizado com sucesso.');
-                this.form.reset();
+                this.form.reset();                
+                this.loading.dismiss();
             } else {
                 this.showAlert('Alerta', data.toString());
+                this.loading.dismiss();
             }
 
             this.loading.dismiss();

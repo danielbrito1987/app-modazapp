@@ -1,14 +1,8 @@
 {
-  "name": "meuApp2",
+  "name": "modazapp",
   "app_id": "",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  },
-  "proxies": [
-    {
-      "path": "/conversation/api/v1/workspaces",
-      "proxyUrl": "https://gateway.watsonplatform.net/"
-    }
-  ]
+  }
 }

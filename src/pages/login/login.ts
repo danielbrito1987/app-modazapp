@@ -34,7 +34,6 @@ export class LoginPage{
         //this.http.post('http://localhost:65417/api/Login', this.form.value).subscribe(data =>{
             if(data != null){
                 if(data["Usuario"] != null){
-                    console.log(data);
                     this.token = data["Token"];
                     localStorage.setItem("tokenLogin", this.token);
                     localStorage.setItem("IdUsuario", data["IdUsuario"]);
@@ -50,10 +49,12 @@ export class LoginPage{
                     localStorage.setItem("CodPedido", '');
                     localStorage.setItem("Produto", '');
                     this.showAlert('Erro', data.toString());
+                    this.loading.dismiss();
                 }
                 else{
                     this.showAlert("Atenção", data.toString());
                     this.goRootPage();
+                    this.loading.dismiss();
                 }
             }
             //this.loading.dismiss();

@@ -7,7 +7,6 @@ import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { EmailComposer } from '@ionic-native/email-composer';
-import { LojasProvider } from '../../providers/lojas/lojas';
 
 @Component({
     selector: 'page-feedback',
@@ -28,9 +27,10 @@ export class FeedbackPage{
     imageURI:any;
     imageFileName:any;
     usuarioLogado: boolean;
+    temPermissao: boolean = false;
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public camera: Camera,
-        public navParams: NavParams, public toastCtrl: ToastController, private alertCtrl: AlertController, public emailComposer: EmailComposer, public lojasProvider: LojasProvider){
+        public navParams: NavParams, public toastCtrl: ToastController, private alertCtrl: AlertController, public emailComposer: EmailComposer){
             this.nome = "";
             this.email = "";
             this.pedido = "";
@@ -55,21 +55,22 @@ export class FeedbackPage{
 
     getImage() {
         const options: CameraOptions = {
-          destinationType: this.camera.DestinationType.DATA_URL,
-          sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-          encodingType: this.camera.EncodingType.PNG,
-          targetWidth: 850,
-          targetHeight: 900
+            destinationType: this.camera.DestinationType.DATA_URL,
+            sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+            encodingType: this.camera.EncodingType.PNG,
+            targetWidth: 850,
+            targetHeight: 900
         }
-      
+    
         this.showLoader();
         
         this.camera.getPicture(options).then((imageData) => {            
             this.imageURI = "data:image/png;base64," + imageData;
             this.loading.dismiss();
         }, (err) => {
-          console.log(err);
-          this.showAlert('Erro', err);
+            console.log(err);
+            this.loading.dismiss();
+            this.showAlert('Erro', err);
         });
     }
 
@@ -81,14 +82,15 @@ export class FeedbackPage{
         this.http.post('https://api.modazapp.online/api/Pedidos/SalvarComprovante', dados).subscribe(data =>{
         //this.http.post('http://localhost:65417/api/Pedidos/SalvarComprovante', dados).subscribe(data =>{
             if(data.toString() == 'OK'){
+                this.loading.dismiss();
                 this.showAlert('Sucesso', 'Comprovante enviado com sucesso.');
             } else {
+                this.loading.dismiss();
                 this.showAlert('Erro', data.toString());
             }
             this.loading.dismiss();
             this.navCtrl.popToRoot();
         }, (error) =>{
-            console.log(error);
             this.showAlert('Erro', error.message);
             this.loading.dismiss();
             this.goRootPage();
