@@ -14,17 +14,10 @@ export class LoginPage{
     token: any;
     loading: any;
     pedidos: any;
+    email: string;
     
     constructor(public navCtrl: NavController, private http: HttpClient, private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController){
         this.form = new FormGroup({ Login: new FormControl(), Senha: new FormControl() });        
-
-        // if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ""){
-        //     this.showAlert('Atenção', 'Usuário já está logado.');
-        //     this.navCtrl.push(HomePage);
-        // }
-        // else{
-        //     this.navCtrl.push(LoginPage);
-        // }
     }
 
     Login(): void{
@@ -34,6 +27,7 @@ export class LoginPage{
         //this.http.post('http://localhost:65417/api/Login', this.form.value).subscribe(data =>{
             if(data != null){
                 if(data["Usuario"] != null){
+                    console.log(data);
                     this.token = data["Token"];
                     localStorage.setItem("tokenLogin", this.token);
                     localStorage.setItem("IdUsuario", data["IdUsuario"]);
@@ -52,12 +46,11 @@ export class LoginPage{
                     this.loading.dismiss();
                 }
                 else{
+                    this.loading.dismiss();
                     this.showAlert("Atenção", data.toString());
                     this.goRootPage();
-                    this.loading.dismiss();
                 }
             }
-            //this.loading.dismiss();
         }, (error) =>{
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
             this.loading.dismiss();
@@ -66,17 +59,13 @@ export class LoginPage{
     }
 
     getPedidos(){
-        //this.showLoader();
-
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             this.http.get('https://api.modazapp.online/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{            
             //this.http.get('http://localhost:65417/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{            
                 this.pedidos = data;
                 localStorage.setItem('Pedidos', JSON.stringify(data));
-                //this.loading.dismiss();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
-                //this.loading.dismiss();
                 this.goRootPage();
             });
         } else{
@@ -85,21 +74,26 @@ export class LoginPage{
     }
 
     EsqueciSenha(): void{
-        var idUsuario = localStorage.getItem('IdUsuario');
-
-        var alterarSenha = { IdUsuario: idUsuario };
-
-        this.http.post('https://api.modazapp.online/api/EsqueceuSenha', JSON.stringify(alterarSenha)).subscribe(data => {
-            if(data["Token"] != null){
-                alert("Um link de recuperação de sua senha foi enviado para o e-mail cadastrado em nosso sistema.");
-            }else{
-                alert("Erro ao gerar o link de recuperação de senha.");
-            }
-        }, (error) =>{
-            this.showAlert('Erro', 'Falha na comunicação com o servidor.');
-            this.loading.dismiss();
-            this.goRootPage();
-        });
+        if(this.email != "" && this.email != null){
+            this.showLoading();
+            
+            this.http.get('https://api.modazapp.online/api/Usuarios/EsqueceuSenha?id=' + this.email).subscribe(data => {
+            //this.http.get('http://localhost:65417/api/Usuarios/EsqueceuSenha?id=' + this.email).subscribe(data => {
+                if(data["success"] == false){
+                    this.showAlert("Erro!", data["message"]);
+                    this.loading.dismiss();
+                }else if(data["success"] == true){
+                    this.showAlert("Sucesso", "Em instantes você receberá um e-mail com a nova senha.");
+                    this.loading.dismiss();
+                }
+            }, (error) =>{
+                this.showAlert('Erro', 'Falha na comunicação com o servidor.');
+                this.loading.dismiss();
+                this.goRootPage();
+            });
+        }else{
+            this.showAlert('Atenção', 'Campo Usuário é obrigatório.');
+        }
     }
 
     goCadastroPage(): void{
@@ -118,6 +112,14 @@ export class LoginPage{
     showLoader(){    
         this.loading = this.loadingCtrl.create({
           content: "Autenticando..."
+        });
+    
+        this.loading.present();
+    }
+
+    showLoading(){    
+        this.loading = this.loadingCtrl.create({
+          content: "Carregando..."
         });
     
         this.loading.present();

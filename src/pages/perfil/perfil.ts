@@ -9,8 +9,15 @@ import { HomePage } from '../home/home';
     templateUrl: "perfil.html"
 })
 export class PerfilPage{
+    loading: any;
     usuarioLogado: boolean;
     items: any;
+    nomeUsuario: string;
+    emailusuario: string;
+    cpfUsuario: string;
+    dataNasc: string;
+    senha: string;
+    confirmaSenha: string;
 
     constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -22,12 +29,19 @@ export class PerfilPage{
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != "")
         {
             if(localStorage.getItem("Perfil") != null && localStorage.getItem("Perfil") != ""){
-                this.items = JSON.stringify(localStorage.getItem("Perfil"));
+                this.items = JSON.parse(localStorage.getItem("Perfil"));
+                this.nomeUsuario = this.items[0].Nome;
+                this.emailusuario = this.items[0].Email;
+                this.cpfUsuario = this.items[0].Cpf;
+                this.dataNasc = this.items[0].DataNasc;
             }else{
                 this.http.get('https://api.modazapp.online/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
                 //this.http.get('http://localhost:65417/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
-                    console.log(data);
                     this.items = data;
+                    this.nomeUsuario = data[0].Nome;
+                    this.emailusuario = data[0].Email;
+                    this.cpfUsuario = data[0].Cpf;
+                    this.dataNasc = data[0].DataNasc;
                     localStorage.setItem('Perfil', JSON.stringify(data));
                 }, (erro) => {
                     this.showAlert('Erro', 'Falha na comunicação com o servidor.');
@@ -36,6 +50,34 @@ export class PerfilPage{
             }
         }else{
             this.goLoginPage();
+        }
+    }
+
+    alterarUsuario(){
+        if(this.senha == this.confirmaSenha){
+            this.showLoader();
+            if(this.validaLogin()){
+                var dados = { 'IdUsuario': parseInt(localStorage.getItem("IdUsuario")), 'Nome': this.nomeUsuario, 'Email': this.emailusuario, 'CPF': this.cpfUsuario, 'DataNasc': this.dataNasc, 'Senha': this.senha };
+
+                // this.http.post("http://localhost:65417/api/Usuarios/AlterarPerfil", dados).subscribe(data => {
+                this.http.post("https://api.modazapp.online/api/Usuarios/AlterarPerfil", dados).subscribe(data => {
+                    this.loading.dismiss();
+                    if(data["success"] == true){
+                        this.showAlert("Sucesso", data["message"]);
+                        this.nomeUsuario = data["Nome"];
+                        this.emailusuario = data["Email"];
+                        this.cpfUsuario = data["CPF"];
+                        this.dataNasc = data["DataNasc"];
+                    }else{
+                        this.showAlert("Atenção", data["message"]);
+                    }
+                })
+            }else{
+                this.loading.dismiss();
+                this.goLoginPage();
+            }
+        }else{
+            this.showAlert("Atenção", "Senha e confirmação de senha diferentes.");
         }
     }
 
@@ -73,5 +115,13 @@ export class PerfilPage{
           buttons: ['OK']
         });
         alert.present();
+    }
+
+    showLoader(){    
+        this.loading = this.loadingCtrl.create({
+          content: "Aguarde..."
+        });
+    
+        this.loading.present();
     }
 }

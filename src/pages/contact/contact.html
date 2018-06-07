@@ -49,10 +49,12 @@
           </ion-refresher>
       
         <ion-card *ngFor="let item of items" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
-          <img src="assets/imgs/{{ item.Imagem }}" />
+          <img *ngIf="item.Imagem.includes('data')" src="{{ item.Imagem }}" />
+          <img *ngIf="!item.Imagem.includes('data')" src="assets/imgs/{{ item.Imagem }}" />
           <ion-item>
             <ion-avatar item-start>
-              <img src="assets/imgs/{{ item.Logomarca }}" />
+              <img *ngIf="item.Logomarca.includes('data')" src="{{ item.Logomarca }}" />
+              <img *ngIf="!item.Logomarca.includes('data')" src="assets/imgs/{{ item.Logomarca }}" />
             </ion-avatar>      
             <ion-card-content style="padding: 0">
               <h2>{{ item.Nome }}</h2>

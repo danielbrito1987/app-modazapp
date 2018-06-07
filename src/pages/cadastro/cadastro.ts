@@ -17,35 +17,40 @@ export class CadastroPage {
     cpf: any;
     Tipo: any;
     usuarioLogado: boolean;
+    validaPoliticas: boolean = false;
     public CPF = require("cpf_cnpj").CPF;
-    public CNPJ = require("cpf_cnpj").CNPJ;
+    public CNPJ = require("cpf_cnpj").CNPJ;    
     
     constructor(public navCtrl: NavController, private http: HttpClient, public alertCtrl: AlertController, 
         public fbld: FormBuilder, public toastCtrl: ToastController, private loadingCtrl: LoadingController) {
-        this.form = new FormGroup({ Tipo: new FormControl(), Nome: new FormControl(), DataNasc: new FormControl(), Email: new FormControl(), Sexo: new FormControl(), CPF: new FormControl(), Senha: new FormControl(), RazaoSocial: new FormControl(), CNPJ: new FormControl() });
+        this.form = new FormGroup({ Tipo: new FormControl(), Nome: new FormControl(), DataNasc: new FormControl(), Email: new FormControl(), Sexo: new FormControl(), CPF: new FormControl(), Senha: new FormControl(), RazaoSocial: new FormControl(), CNPJ: new FormControl(), chkPol: new FormControl() });
         this.Tipo = "PF";
         this.usuarioLogado = this.validaLogin();
     }
 
     inserirUsuario(): void{
-        this.showLoader();
+        if(this.validaPoliticas){
+            this.showLoader();
 
-        this.http.post("https://api.modazapp.online/api/usuarios", this.form.value).subscribe(data =>{
-        //this.http.post("http://localhost:65417/api/usuarios", this.form.value).subscribe(data =>{
-            if(data["idUsuario"] != null){                
-                this.showAlert('Sucesso', 'Cadastro realizado com sucesso.');
-                this.form.reset();                
-                this.loading.dismiss();
-            } else {
-                this.showAlert('Alerta', data.toString());
-                this.loading.dismiss();
-            }
+            this.http.post("https://api.modazapp.online/api/usuarios", this.form.value).subscribe(data =>{
+            //this.http.post("http://localhost:65417/api/usuarios", this.form.value).subscribe(data =>{
+                if(data["idUsuario"] != null){                
+                    this.showAlert('Sucesso', 'Cadastro realizado com sucesso.');
+                    this.form.reset();                
+                    this.loading.dismiss();
+                } else {
+                    this.showAlert('Alerta', data.toString());
+                    this.loading.dismiss();
+                }
 
-            this.loading.dismiss();
-        }, error =>{
-            this.showAlert('Erro', 'Erro ao enviar os dados.');
-            this.loading.dismiss();
-        });
+                this.loading.dismiss();
+            }, error =>{
+                this.showAlert('Erro', 'Erro ao enviar os dados.');
+                this.loading.dismiss();
+            });
+        }else{
+            this.showAlert('Atenção', 'Marque a opção Li e Aceito as Políticas de Uso do ModaZapp.');
+        }
     }
 
     goLoginPage(): void{

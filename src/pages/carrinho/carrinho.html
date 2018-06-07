@@ -1,103 +1,82 @@
 <ion-header>
-    <ion-navbar color="primary">
-        <div style="text-align:center">
-        <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        <ion-navbar color="primary">
+            <div style="text-align:center">
+            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+            </div>
+            <ion-title></ion-title>
+            <ion-buttons end>
+                <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                    <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+                </button>      
+            </ion-buttons>
+            <ion-buttons end>
+                <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                    <ion-icon ios="ios-person" md="md-person"></ion-icon>
+                </button>
+            </ion-buttons>
+        </ion-navbar>
+    </ion-header>
+    
+    <ion-content>
+            <ion-fab right bottom *ngIf="validaLogin()">
+                <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+                <ion-fab-list side="top">
+                    <button ion-fab (click)="goCarrinhoPage();">
+                        <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+                        <ion-label>Carrinho</ion-label>
+                    </button>
+                    <button ion-fab (click)="goPedidosPage();">
+                        <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+                        <ion-label>Pedidos</ion-label>
+                    </button>
+                    <button ion-fab (click)="goCamera()">
+                        <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+                        <ion-label>Comprovante</ion-label>
+                    </button>
+                    <button ion-fab (click)="logoff()">
+                        <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+                        <ion-label>Sair</ion-label>
+                    </button>
+                </ion-fab-list>
+            </ion-fab>
+    
+        <div text-center padding>
+            Finalize sua compra em até 2 horas.
         </div>
-        <ion-title></ion-title>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
-                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-            </button>      
-        </ion-buttons>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
-</ion-header>
-
-<ion-content>
-        <ion-fab right bottom *ngIf="validaLogin()">
-            <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
-            <ion-fab-list side="top">
-                <button ion-fab (click)="goCarrinhoPage();">
-                    <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
-                    <ion-label>Carrinho</ion-label>
-                </button>
-                <button ion-fab (click)="goPedidosPage();">
-                    <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
-                    <ion-label>Pedidos</ion-label>
-                </button>
-                <button ion-fab (click)="goCamera()">
-                    <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
-                    <ion-label>Comprovante</ion-label>
-                </button>
-                <button ion-fab (click)="logoff()">
-                    <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
-                    <ion-label>Sair</ion-label>
-                </button>
-            </ion-fab-list>
-        </ion-fab>
-
-    <div text-center padding>
-        Finalize sua compra em até 2 horas.
-    </div>
-    <ion-card *ngFor="let item of items">
-        <ion-card-header>
-            {{ item.nomeLoja }}
-        </ion-card-header>
-        <ion-item>
-            <h2>{{ item.descProduto }}</h2>            
-            <ion-row>
-                <ion-col *ngIf="item.qtdPedidoP > 0">
-                    <p>Qtd P: {{ item.qtdPedidoP }}</p>
-                    <p *ngIf="item.estoqueP <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>
-                <ion-col *ngIf="item.qtdPedidoM > 0">
-                    <p>Qtd M: {{ item.qtdPedidoM }}</p>
-                    <p *ngIf="item.estoqueM <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>
-                <ion-col *ngIf="item.qtdPedidoG > 0">
-                    <p>Qtd G: {{ item.qtdPedidoG }}</p>
-                    <p *ngIf="item.estoqueG <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>
-                <ion-col *ngIf="item.qtdPedidoGG > 0">
-                    <p>Qtd GG: {{ item.qtdPedidoGG }}</p>
-                    <p *ngIf="item.estoqueGG <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>
-                <ion-col *ngIf="item.qtdPedidoXG > 0">
-                    <p>Qtd XG: {{ item.qtdPedidoXG }}</p>
-                    <p *ngIf="item.estoqueXG <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>
-                <ion-col *ngIf="item.qtdPedidoXGG > 0">
-                    <p>Qtd XGG: {{ item.qtdPedidoXGG }}</p>
-                    <p *ngIf="item.estoqueXGG <= 0">Produto pode não ter estoque disponível!</p>
-                </ion-col>                
-            </ion-row>
-            <ion-row>
-                <ion-col>
-                    <p>Valor Unit.: {{ item.valorProduto.toLocaleString('pt-BR') }}</p>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col>
-                    <p>Total: {{ item.valorTotal.toLocaleString('pt-BR') }}</p>
-                </ion-col>
-                <ion-col>
-                    <button ion-button color="secondary" block (click)="removeItem(item.idCarrinho);">
-                        <ion-icon ios="ios-trash" md="md-trash">
-                    </ion-icon></button>
-                </ion-col>
-            </ion-row>
-        </ion-item>
-    </ion-card>
-    <ion-card>
-        <ion-item>
-            <h2>Total da Compra: {{ valorTotal().toLocaleString('pt-BR') }}</h2>
-        </ion-item>
-    </ion-card>
-    <div padding>
-        <button ion-button color="secondary" block (click)="goCheckou();">Finalizar</button>
-    </div>
-</ion-content>
+        <ion-card *ngFor="let item of items">
+            <ion-card-header>
+                {{ item.nomeLoja }}
+            </ion-card-header>
+            <ion-item>
+                <h2>{{ item.descProduto }}</h2>            
+                <ion-row *ngFor="let ped of item.qtdPedido.split(',')">
+                    <ion-col>
+                        <p *ngIf="ped.split(':')[1] > 0">Qtd {{ ped.split(':')[0] }}: {{ ped.split(':')[1] }}</p>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <p>Valor Unit.: {{ item.valorProduto | number: '1.2-2' }}</p>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <p>Total: {{ item.valorTotal | number: '1.2-2' }}</p>
+                    </ion-col>
+                    <ion-col>
+                        <button ion-button color="secondary" block (click)="removeItem(item.idCarrinho);">
+                            <ion-icon ios="ios-trash" md="md-trash">
+                        </ion-icon></button>
+                    </ion-col>
+                </ion-row>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <h2>Total da Compra: {{ valorTotal() | number: '1.2-2' }}</h2>
+            </ion-item>
+        </ion-card>
+        <div padding>
+            <button ion-button color="secondary" block (click)="goCheckou();">Finalizar</button>
+        </div>
+    </ion-content>

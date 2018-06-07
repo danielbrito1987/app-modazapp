@@ -18,6 +18,7 @@ export class DetalhesPedidoPage{
     codPedido: any;
     teste: any;
     usuarioLogado: boolean;
+    qtdPedido: any[];
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public navParams: NavParams,
         private http: HttpClient, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -33,8 +34,11 @@ export class DetalhesPedidoPage{
 
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             this.http.get('http://api.modazapp.online/api/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{
+            //this.http.get('http://localhost:65417/api/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{                
                 this.items = data;
+                console.log(this.items);
+                this.qtdPedido = data[0].QtdPedido.split(',');
+
                 this.loading.dismiss();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');

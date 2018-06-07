@@ -58,6 +58,10 @@
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>Senha</ion-label>
                 <ion-input formControlName="Senha" type="password"></ion-input>
             </ion-item>
+            <ion-item>
+                <ion-label>Li e aceito as políticas de uso do ModaZapp.</ion-label>
+                <ion-checkbox color="secondary" formControlName="chkPol" [(ngModel)]="validaPoliticas"></ion-checkbox>
+            </ion-item>
         </ion-list>
     </div>
     <!-- <p>

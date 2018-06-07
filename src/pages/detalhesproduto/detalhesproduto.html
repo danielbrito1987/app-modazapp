@@ -1,338 +1,116 @@
 <ion-header>
-        <ion-navbar color="primary">
-          <div style="text-align:center">
-            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
-          </div>
-          <ion-title></ion-title>
-            <ion-buttons end>
-                <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
-                  <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-                </button>      
-            </ion-buttons>
-            <ion-buttons end>
-                <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                    <ion-icon ios="ios-person" md="md-person"></ion-icon>
-                </button>
-            </ion-buttons>
-        </ion-navbar>
-        <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
-      </ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+        <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+            </button>      
+        </ion-buttons>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
+</ion-header>
       
-      <ion-content class="card-page">
-        <ion-fab right bottom *ngIf="validaLogin()">
-            <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
-            <ion-fab-list side="top">
-              <button ion-fab [navPush]="carrinhoPage">
-                <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
-                <ion-label>Carrinho</ion-label>
-              </button>
-              <button ion-fab (click)="goPedidosPage();">
-                <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
-                <ion-label>Pedidos</ion-label>
-              </button>
-              <button ion-fab (click)="goCamera()">
-                <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
-                <ion-label>Comprovante</ion-label>
-              </button>
-              <button ion-fab (click)="logoff()">
-                <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
-                <ion-label>Sair</ion-label>
-              </button>
-            </ion-fab-list>
-        </ion-fab>
-        <ion-refresher (ionRefresh)="doRefresh($event)">
-            <ion-refresher-content>
-                pullingIcon="arrow-dropdown"
-                pullingText="Puxe para atualizar"
-                refreshingSpinner="circles"
-                refreshingText="Atualizando...">
-            </ion-refresher-content>
-        </ion-refresher>
-      
-        <ion-list inset>
-          <ion-card *ngFor="let item of items">
-              <ion-slides pager loop=true>
-                    <ion-slide *ngIf="item.Imagem != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Imagem }}" class="slide-image" /></ion-slide>
-                    <ion-slide *ngIf="item.Slide2 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide2 }}" class="slide-image" /></ion-slide>
-                    <ion-slide *ngIf="item.Slide3 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide3 }}" class="slide-image" /></ion-slide>
-              </ion-slides>
+<ion-content class="card-page">
+    <ion-fab right bottom *ngIf="validaLogin()">
+        <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+        <ion-fab-list side="top">
+            <button ion-fab [navPush]="carrinhoPage">
+            <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            <ion-label>Carrinho</ion-label>
+            </button>
+            <button ion-fab (click)="goPedidosPage();">
+            <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+            <ion-label>Pedidos</ion-label>
+            </button>
+            <button ion-fab (click)="goCamera()">
+            <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+            <ion-label>Comprovante</ion-label>
+            </button>
+            <button ion-fab (click)="logoff()">
+            <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+            <ion-label>Sair</ion-label>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content>
+            pullingIcon="arrow-dropdown"
+            pullingText="Puxe para atualizar"
+            refreshingSpinner="circles"
+            refreshingText="Atualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list inset>
+        <ion-card *ngFor="let item of items">
+            <ion-slides pager loop=true>
+                <ion-slide *ngIf="item.Imagem != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Imagem }}" class="slide-image" /></ion-slide>
+                <ion-slide *ngIf="item.Slide2 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide2 }}" class="slide-image" /></ion-slide>
+                <ion-slide *ngIf="item.Slide3 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide3 }}" class="slide-image" /></ion-slide>
+            </ion-slides>
             <!-- <img src="{{ item.Imagem }}" /> -->
             <ion-card-content>
                 <h2>{{ item.Descricao }}</h2>
                 <button ion-button icon-left small color="secondary" (click)="goEspecificacao(item.IdProduto)">
                     <p style="color: white">Leia mais</p>
                 </button>
-                <br /><ion-badge *ngIf="item.TotalEstoque <= 0" color="danger">Produto sem Estoque</ion-badge>
+                <!-- <br /><ion-badge *ngIf="item.TotalEstoque <= 0" color="danger">Produto sem Estoque</ion-badge> -->
             </ion-card-content>
             <ion-row>
-              <ion-col>
+                <ion-col>
                 <ion-item>
                     <!-- <ion-icon name="md-pricetag" color="secondary" item-start small></ion-icon> -->
                     <h2 item-start><strong>Vlr. Varejo:</strong></h2>
                     <h2 item-start>R$ {{ item.Valor | number : '1.2-2' }}</h2>
                 </ion-item>
-              </ion-col>
+                </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col>
-                <ion-item *ngIf="tipoUsuario == 'PJ'">
+                <ion-col>
+                <ion-item *ngIf="tipoUsuario == 'PJ' && item.ValorAtacado != 0">
                     <!-- <ion-icon name="md-pricetags" color="secondary" item-start small></ion-icon> -->
                     <h2 item-start><strong>Vlr. Atacado:</strong></h2>
                     <h2 item-start>R$ {{ item.ValorAtacado | number : '1.2-2' }}</h2>
                 </ion-item>
-              </ion-col>
+                </ion-col>
             </ion-row>
 
             <ion-grid>
                 <ion-row nowrap style="overflow-x: scroll!important; overflow-y:hidden;">
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivP()">P</button>
-                    </ion-col>
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivM()">M</button>
-                    </ion-col>
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivG()">G</button>
-                    </ion-col>
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivGG()">GG</button>
-                    </ion-col>
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivXG()">XG</button>
-                    </ion-col>
-                    <ion-col>
-                        <button class="cartao card-1" ion-button round (click)="hideDivXGG()">XGG</button>
+                    <ion-col *ngFor="let est of estoque">                            
+                        <button class="cartao card-1" ion-button round (click)="hideDiv(est.split(':')[0].trim())">{{ est.split(':')[0].trim() }}</button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
 
-            <!-- <ion-item>
-                <ion-scroll scrollx style="height:100px">
-                    <div class="scroll-item">
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivP()">P</button>
-                        </ion-col>
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivM()">M</button>
-                        </ion-col>
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivG()">G</button>
-                        </ion-col>
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivGG()">GG</button>
-                        </ion-col>
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivXG()">XG</button>
-                        </ion-col>
-                        <ion-col col-33>
-                            <button class="cartao card-1" ion-button round (click)="hideDivXGG()">XGG</button>
-                        </ion-col>
-                    </div>
-                </ion-scroll>
-            </ion-item> -->
-
-            <div id="divQtdP" *ngIf="esconderDivP">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdP"></ion-input>                
+            <div id="div{{ est.tamanho }}" style="display:none" *ngFor="let est of qtdPedido">
+                <ion-item padding>
+                    <ion-label color="secondary" style="color: #1ABC9C;"floating>{{ est.tamanho }}</ion-label>
+                    <ion-input [(ngModel)]="est.qtd" [ngModelOptions]="{standalone: true}" type="tel"></ion-input>
                 </ion-item>
             </div>
 
-            <div id="divQtdM" *ngIf="esconderDivM">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdM"></ion-input>                
-                </ion-item>
-            </div>
-
-            <div id="divQtdG" *ngIf="esconderDivG">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdG"></ion-input>                
-                </ion-item>
-            </div>
-
-            <div id="divQtdGG" *ngIf="esconderDivGG">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdGG"></ion-input>                
-                </ion-item>
-            </div>
-
-            <div id="divQtdXG" *ngIf="esconderDivXG">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdXG"></ion-input>                
-                </ion-item>
-            </div>
-
-            <div id="divQtdXGG" *ngIf="esconderDivXGG">
-                <ion-item>                
-                    <ion-input type="tel" [(ngModel)]="qtdXGG"></ion-input>                
-                </ion-item>
-            </div>
-            
-            <!-- <ion-grid>
-                <ion-row>
-                    <ion-col>
-                        <button ion-button round>P</button>
-                    </ion-col>
-                    <ion-col>
-                        <button ion-button round>M</button>
-                    </ion-col>
-                    <ion-col>
-                        <button ion-button round>G</button>
-                    </ion-col>
-                    <ion-col>
-                        <button ion-button round>GG</button>
-                    </ion-col>
-                    <ion-col>
-                        <button ion-button round>XG</button>                        
-                    </ion-col>
-                    <ion-col>
-                        <button ion-button round>XGG</button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid> -->
-      
-              <!-- <ion-row>
+            <!-- <ion-row>
                 <ion-col>
-                    <ion-item>
-                        <ion-label>Tamanho</ion-label>
-                    </ion-item>
+                    <h2 text-center *ngIf="item.QtdEstoque <= 0">Produto sem Estoque!</h2>
                 </ion-col>
-                <ion-col>
-                    <ion-item>
-                        <ion-label>Qtd.</ion-label>
-                    </ion-item>
-                </ion-col>
-              </ion-row> -->
-
-                <!-- <ion-row align-items-center>
-                    <ion-col col-3>P</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdP();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdP }}</ion-label>
-                    </ion-col>
-                    
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdP();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                    <ion-col col-3>M</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdM();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdM }}</ion-label>
-                    </ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdM();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                    <ion-col col-3>G</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdG();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdG }}</ion-label>
-                    </ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdG();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                    <ion-col col-3>GG</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdGG();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdGG }}</ion-label>
-                    </ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdGG();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                    <ion-col col-3>XG</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdXG();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdXG }}</ion-label>
-                    </ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdXG();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row align-items-center>
-                    <ion-col col-3>XGG</ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="addQtdXGG();">
-                            <ion-icon name="md-add-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                    <ion-col col-3>
-                        <ion-label padding style="text-align:center">{{ qtdXGG }}</ion-label>
-                    </ion-col>
-                    <ion-col col-3>
-                        <button ion-button clear large (click)="removeQtdXGG();">
-                            <ion-icon name="md-remove-circle" color="secondary"></ion-icon>                        
-                        </button>
-                    </ion-col>
-                </ion-row> -->
-      
-            <!-- <ion-row style="text-align: center;">
-              <ion-col>                
-                  <button ion-button clear large (click)="maisQtd();"><ion-icon ios="ios-add-circle" md="md-add-circle" color="secondary"></ion-icon></button>
-              </ion-col>
-              <ion-col>
-                  <ion-item>
-                      <ion-input type="text" min="1" [value]="qtd" [(ngModel)]="qtd"></ion-input>                    
-                  </ion-item>
-              </ion-col>
-              <ion-col>
-                  <button ion-button clear large (click)="menosQtd();"><ion-icon ios="ios-remove-circle" md="md-remove-circle" color="secondary"></ion-icon></button>
-              </ion-col>
             </ion-row> -->
-            <ion-row>
-              <ion-col>
-                  <h2 text-center *ngIf="item.QtdEstoque <= 0">Produto sem Estoque!</h2>
-              </ion-col>
-            </ion-row>
             <ion-row style="padding-top:10px;">
-              <ion-col>
+                <ion-col>
                 <button ion-button icon-left small (click)="comprar(item.IdProduto)">
-                  <ion-icon name="md-cart" color="secondary"></ion-icon>
-                  <div><p color="secondary">Comprar</p></div>
+                    <ion-icon name="md-cart" color="secondary"></ion-icon>
+                    <div><p color="secondary">Comprar</p></div>
                 </button>                      
-              </ion-col>
+                </ion-col>
             </ion-row>
-          </ion-card>
-        </ion-list>
-      </ion-content>
+        </ion-card>
+    </ion-list>
+</ion-content>

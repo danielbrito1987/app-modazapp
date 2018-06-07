@@ -34,8 +34,20 @@ export class ContactPage {
     if(this.showLoad)
       this.showLoader();
 
+    if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
+        this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
+        //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
+        this.items = data;     
+        localStorage.setItem('Lojas', JSON.stringify(data));
+        this.loading.dismiss();
+      }, (error) =>{
+        this.showAlert('Erro', 'Falha na comunicação com o servidor');
+        this.loading.dismiss();
+      });
+    }else{
       this.items = JSON.parse(localStorage.getItem('Lojas'));
       this.loading.dismiss();
+    }
   }
 
   showLoader(){    
@@ -50,7 +62,7 @@ export class ContactPage {
   getItems(ev:any){
     let val = ev.target.value;
       
-    this.http.get('https://api.modazapp.online/api/produto/PesquisaProduto?id=' + val).subscribe(data =>{
+    this.http.get('http://api.modazapp.online/api/produto/PesquisaProduto?id=' + val).subscribe(data =>{
       this.items = data;
     }, (error) =>{
       this.showAlert('Erro', 'Falha na comunicação com o servidor.');

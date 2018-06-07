@@ -20,6 +20,7 @@ export class CarrinhoPage{
     teste: any;
     usuarioLogado: boolean;
     qtdItems: any;
+    qtdPedido: any[];
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public alertCtrl: AlertController,
         private http: HttpClient, public toastCtrl: ToastController){
@@ -33,9 +34,16 @@ export class CarrinhoPage{
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             this.http.get('https://api.modazapp.online/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
             //this.http.get('http://localhost:65417/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{                
+                this.qtdPedido = [];
                 this.items = data;
                 this.qtdItems = data;
-                if(this.qtdItems.length > 0){
+                console.log(data);
+                
+                if(this.qtdItems.length > 0){ 
+                    for(let i = 0; i < this.qtdItems.length; i++){
+                        this.qtdPedido = data[i]['qtdPedido'].split(',');
+                    }                    
+                    //console.log(data[0]['qtdPedido'].split(','));
                     localStorage.setItem('Carrinho', JSON.stringify(data));
                     localStorage.setItem('CodPedido', data[0]['codPedido']);
                     this.loading.dismiss();
@@ -48,7 +56,6 @@ export class CarrinhoPage{
                 this.goRootPage();
             });
         }else{
-            this.loading.dismiss();
             this.goLoginPage();
         }     
     }
@@ -112,6 +119,7 @@ export class CarrinhoPage{
     }
 
     removeItem(item: any){
+        console.log(item);
         this.http.get('http://api.modazapp.online/api/Carrinho/AtualizaCarrinho?id=' + item).subscribe(
             resp => this.getItems(),
             (err) => { this.showToast('top', 'Erro ao excluir o item do carrinho.' + '<br />' + err.message); console.log(err) }

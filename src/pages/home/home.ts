@@ -27,11 +27,15 @@ export class HomePage {
   searchText: string = null;
   usuarioLogado: boolean;
   pedidos: any;
+  results: any;
+  cidade: any;
+  uf: any;
   
   constructor(public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
       this.showLoad = true;
-      this.initializeItems();      
+      //this.obterCidade();
+      this.initializeItems();
       this.usuarioLogado = this.validaLogin();
   }  
   
@@ -42,7 +46,7 @@ export class HomePage {
     if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
         this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
         //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
-        this.items = data;     
+        this.items = data;
         localStorage.setItem('Lojas', JSON.stringify(data));
         this.loading.dismiss();
       }, (error) =>{
@@ -60,6 +64,19 @@ export class HomePage {
     //     localStorage.setItem('Lojas', JSON.stringify(result));
     //     this.loading.dismiss();
     // });
+  }
+
+  obterCidade(){
+    if(navigator){
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + pos.coords.latitude + ',' + pos.coords.longitude).subscribe(data => {
+          this.results = data;
+          this.cidade = this.results.results[1].address_components[4].short_name;
+          this.uf = this.results.results[1].address_components[6].short_name;
+          console.log(this.cidade + '-' + this.uf);
+        })
+      })
+    }
   }
   
   showLoader(){    

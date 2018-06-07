@@ -6,10 +6,10 @@ import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { FeedbackPage } from '../feedback/feedback';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+//import { LocalNotifications } from '@ionic-native/local-notifications';
 import { EspecificacaoProdutoPage } from '../especicifacaoproduto/especificacaoproduto';
-import { ProdutoProvider } from '../../providers/produto/produto';
-//import * as moment from 'moment';
+import * as moment from 'moment';
+import * as $ from 'jquery';
 
 @Component({
     selector: "page-detalhesProduto",
@@ -23,122 +23,32 @@ export class DetalhesProdutoPage{
     idProduto: any;
     idCarrinho: any;
     idLoja: any;
-    qtdP: any;
-    qtdM: any;
-    qtdG: any;
-    qtdGG: any;
-    qtdXG: any;
-    qtdXGG: any;
     tam: any;
     showLoad: boolean;
     dataRegistro: any;
     isAndroid: boolean;
     usuarioLogado: boolean;
     tipoUsuario: any;
-    esconderDivP: boolean;
-    esconderDivM: boolean;
-    esconderDivG: boolean;
-    esconderDivGG: boolean;
-    esconderDivXG: boolean;
-    esconderDivXGG: boolean;
+    esconderDiv: boolean;
+    estoque = [];
+    qtdPedido = [];
 
-    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public localNotification: LocalNotifications,
-        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public produtosProvider: ProdutoProvider){            
-            this.qtdP = 0;
-            this.qtdM = 0;
-            this.qtdG = 0;
-            this.qtdGG = 0;
-            this.qtdXG = 0;
-            this.qtdXGG = 0;
+    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
+        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
             this.tam = "P";
             this.showLoad = true;
             this.idProduto = this.navParams.get('IdProduto');            
             this.usuarioLogado = this.validaLogin();
             this.tipoUsuario = localStorage.getItem('TipoUsuario');
-            this.esconderDivP = false;
-            this.esconderDivM = false;
-            this.esconderDivG = false;
-            this.esconderDivGG = false;
-            this.esconderDivXG = false;
-            this.esconderDivXGG = false;
+            this.esconderDiv = false;            
             this.initializeItems();
     }
 
-    hideDivP(){
-        if(this.esconderDivP == true){
-            this.esconderDivP = false;
+    hideDiv(id: string){
+        if($("#div" + id).is(":visible")){
+            $("#div" + id).hide();
         }else{
-            this.esconderDivP = true;
-            this.esconderDivM = false;
-            this.esconderDivG = false;
-            this.esconderDivGG = false;
-            this.esconderDivXG = false;
-            this.esconderDivXGG = false;
-        }
-    }
-
-    hideDivM(){
-        if(this.esconderDivM == true){
-            this.esconderDivM = false;
-        }else{
-            this.esconderDivM = true;
-            this.esconderDivP = false;            
-            this.esconderDivG = false;
-            this.esconderDivGG = false;
-            this.esconderDivXG = false;
-            this.esconderDivXGG = false;
-        }
-    }
-
-    hideDivG(){
-        if(this.esconderDivG == true){
-            this.esconderDivG = false;
-        }else{
-            this.esconderDivG = true;
-            this.esconderDivP = false;
-            this.esconderDivM = false;
-            this.esconderDivGG = false;
-            this.esconderDivXG = false;
-            this.esconderDivXGG = false;
-        }
-    }
-
-    hideDivGG(){
-        if(this.esconderDivGG == true){
-            this.esconderDivGG = false;
-        }else{
-            this.esconderDivGG = true;
-            this.esconderDivG = false;
-            this.esconderDivP = false;
-            this.esconderDivM = false;            
-            this.esconderDivXG = false;
-            this.esconderDivXGG = false;
-        }
-    }
-
-    hideDivXG(){
-        if(this.esconderDivXG == true){
-            this.esconderDivXG = false;
-        }else{                        
-            this.esconderDivXG = true;
-            this.esconderDivP = false;
-            this.esconderDivM = false;            
-            this.esconderDivG = false;
-            this.esconderDivGG = false;            
-            this.esconderDivXGG = false;
-        }
-    }
-
-    hideDivXGG(){
-        if(this.esconderDivXGG == true){
-            this.esconderDivXGG = false;
-        }else{
-            this.esconderDivXGG = true;           
-            this.esconderDivP = false;
-            this.esconderDivM = false;            
-            this.esconderDivG = false;
-            this.esconderDivGG = false;
-            this.esconderDivXG = false;            
+            $("#div" + id).show();
         }
     }
 
@@ -174,12 +84,12 @@ export class DetalhesProdutoPage{
         this.http.get('https://api.modazapp.online/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
         //this.http.get('http://localhost:65417/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
             this.items = data;
-            this.qtdP = 0;
-            this.qtdM = 0;
-            this.qtdG = 0;
-            this.qtdGG = 0;
-            this.qtdXG = 0;
-            this.qtdXGG = 0;
+            this.estoque = data[0].Estoque.split(',');
+
+            this.estoque.forEach(element => {            
+                this.qtdPedido.push({ tamanho: element.split(':')[0].trim(), qtd: '' });
+            });
+
             this.loading.dismiss();            
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
@@ -203,72 +113,6 @@ export class DetalhesProdutoPage{
         }else{            
             this.initializeItems();
         }
-    }
-
-    addQtdP(){
-        this.qtdP = parseInt(this.qtdP) + 1;
-    }
-
-    removeQtdP(){
-        this.qtdP = this.qtdP - 1;
-        
-        if(this.qtdP <= 0)
-            this.qtdP = 0;
-    }
-
-    addQtdM(){
-        this.qtdM = this.qtdM + 1;
-    }
-
-    removeQtdM(){
-        this.qtdM = this.qtdM - 1;
-        
-        if(this.qtdM <= 0)
-            this.qtdM = 0;
-    }
-
-    addQtdG(){
-        this.qtdG = this.qtdG + 1;
-    }
-
-    removeQtdG(){
-        this.qtdG = this.qtdG - 1;
-        
-        if(this.qtdG <= 0)
-            this.qtdG = 0;
-    }
-
-    addQtdGG(){
-        this.qtdGG = this.qtdGG + 1;
-    }
-
-    removeQtdGG(){
-        this.qtdGG = this.qtdGG - 1;
-        
-        if(this.qtdGG <= 0)
-            this.qtdGG = 0;
-    }
-
-    addQtdXG(){
-        this.qtdXG = this.qtdXG + 1;
-    }
-
-    removeQtdXG(){
-        this.qtdXG = this.qtdXG - 1;
-        
-        if(this.qtdXG <= 0)
-            this.qtdXG = 0;
-    }
-
-    addQtdXGG(){
-        this.qtdXGG = this.qtdXGG + 1;
-    }
-
-    removeQtdXGG(){
-        this.qtdXGG = this.qtdXGG - 1;
-        
-        if(this.qtdXGG <= 0)
-            this.qtdXGG = 0;
     }
 
     goLoginPage(){
@@ -318,22 +162,29 @@ export class DetalhesProdutoPage{
 
         this.idLoja = localStorage.getItem('IdLoja');
 
-        var dados = { 'IdProduto': idProduto, 'QtdPedidoP': this.qtdP, 'QtdPedidoM': this.qtdM, 'QtdPedidoG': this.qtdG, 'QtdPedidoGG': this.qtdGG, 'QtdPedidoXG': this.qtdXG, 'QtdPedidoXGG': this.qtdXGG, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja };
+        var qtd = [];
+
+        this.qtdPedido.forEach(element => {
+            qtd.push(element.tamanho + ':' + parseFloat(element.qtd != "" ? element.qtd : 0));
+        });
+        
+        var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja, 'QtdPedido': JSON.stringify(qtd) };
                 
-        if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
-            this.loading.dismiss();
-            this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
-        }
-        else
+        // if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
+        //     this.loading.dismiss();
+        //     this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
+        // }
+        // else
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             localStorage.setItem("Produto", idProduto);
 
-            this.http.post("https://api.modazapp.online/api/carrinho/", dados).subscribe(data => {
-            //this.http.post("http://localhost:65417/api/carrinho/", dados).subscribe(data => {
+            this.http.post("https://api.modazapp.online/api/Carrinho/PostCarrinho?id=", dados).subscribe(data => {
+            //this.http.post("http://localhost:65417/api/Carrinho/PostCarrinho?id=", dados).subscribe(data => {
                 if(data == "Erro"){
                     this.loading.dismiss();
                     this.goLoginPage();
                 }else{
+                    console.log(data);
                     this.idCarrinho = data["idCarrinho"];
 
                     if(localStorage.getItem('ExpirarCarrinho') == null || localStorage.getItem('ExpirarCarrinho') == "")
@@ -346,6 +197,7 @@ export class DetalhesProdutoPage{
                     this.navCtrl.pop();
                 }
             }, (error) =>{
+                console.log(error);
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
                 this.loading.dismiss();
                 this.goRootPage();
@@ -357,17 +209,18 @@ export class DetalhesProdutoPage{
     }
 
     agendarNotificacao(){
+        let dateobject = moment(this.dataRegistro).toDate();
         this.isAndroid = true;
         this.dataRegistro = new Date(new Date().getHours() + 1);
         localStorage.setItem('ExpirarCarrinho', this.dataRegistro);
-
-        this.localNotification.schedule({
-            id: 1,
-            title: 'Atenção',
-            sound: this.isAndroid ? 'file://sound.mp3' : 'file://beep.caf',
-            text: 'Você tem mais 1 hora para finalizar o seu pedido.',
-            trigger: { at: new Date(new Date(this.dataRegistro).getHours() + 1) }
-        });
+                
+        // this.localNotifications.schedule({
+        //   id: 1,
+        //   title: 'Atenção',
+        //   sound: this.isAndroid ? 'file://sound.mp3': 'file://beep.caf',
+        //   text: 'Você tem mais 1 hora para finalizar o seu pedido.',
+        //   at: dateobject
+        // });
     }
 
     doRefresh(refresher) {

@@ -17,6 +17,7 @@ import { ProdutoProvider } from '../../providers/produto/produto';
 })
 export class ProdutosPage{
     public carrinhoPage = CarrinhoPage;
+    produtos: any[] = [];
     items: any;
     loading: any;
     idLoja: any;
@@ -32,9 +33,14 @@ export class ProdutosPage{
     dataRegistro: any;
     usuarioLogado: boolean;
     tipoUsuario: any;
+    page = 0;
+    perPage = 0;
+    totalData = 0;
+    totalPage = 0;
+    errorMessage: string;
 
     constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
-        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public produtosProvider: ProdutoProvider){
+        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public provider: ProdutoProvider){
             this.qtdP = 0;
             this.qtdM = 0;
             this.qtdG = 0;
@@ -53,16 +59,45 @@ export class ProdutosPage{
     initializeItems(): void{
         if(this.showLoad)
             this.showLoader();
-
-        this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{                
+                        
+            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
+            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
                 this.items = data;
+                                
                 this.loading.dismiss();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
                 this.loading.dismiss();
                 this.goRootPage();
         });
+    }
+
+    doInfinite(infiniteScroll){
+        setTimeout(() => {
+            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
+            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
+                this.items = data;
+                
+                if(this.perPage < this.items.length){
+                    for(let i = this.perPage; i < this.perPage + 4; i++){
+                        if(data[i] != undefined)
+                            this.produtos.push({IdProduto: data[i].IdProduto, Imagem: data[i].Imagem, Descricao: data[i].Descricao, Valor: data[i].Valor});
+                    }
+
+                    if(this.perPage < this.items.length){
+                        this.perPage += 4;
+                    }
+                }
+                
+                this.loading.dismiss();
+            }, (error) =>{
+                this.showAlert('Erro', 'Falha na comunicação com o servidor.');
+                this.loading.dismiss();
+                this.goRootPage();
+            });
+
+            infiniteScroll.complete();
+        }, 7000);
     }
 
     getItems(ev:any){
