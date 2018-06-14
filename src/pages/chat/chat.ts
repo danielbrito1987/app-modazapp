@@ -29,13 +29,13 @@ export class ChatPage {
         var watson = require('watson-developer-cloud');
 
         var conversation = new watson.ConversationV1({ 
-            username: 'a3b803e5-f77b-48a9-9d90-42f5cd4bfc9a',
-            password: 'kZkJnvcr7a88',
+            username: 'username',
+            password: 'password',
             version_date: '2018-02-16'
         });
 
         conversation.message({
-            workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
+            workspace_id: 'workspace_id',
             input: { 'text': '' }
         }, function (err, response){
             if(err){
@@ -58,13 +58,13 @@ export class ChatPage {
             var watson = require('watson-developer-cloud');
 
             var conversation = new watson.ConversationV1({ 
-                username: 'a3b803e5-f77b-48a9-9d90-42f5cd4bfc9a',
-                password: 'kZkJnvcr7a88',
+                username: 'username',
+                password: 'password',
                 version_date: '2018-02-16'
             });
 
             conversation.message({
-                workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
+                workspace_id: 'workspace_id',
                 input: { 'text': this.mensagem }
             }, function (err, response){
                 if(err){
