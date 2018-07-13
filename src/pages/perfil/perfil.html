@@ -30,6 +30,11 @@
         </ion-item>
 
         <ion-item>
+            <ion-label color="secondary" style="color: #1ABC9C;" floating>Telefone</ion-label>
+            <ion-input type="tel" [(ngModel)]="telefoneusuario" [brmasker]="{mask:'(00) 00000-0000', len:15}"></ion-input>
+        </ion-item>
+
+        <ion-item>
             <ion-label color="secondary" style="color: #1ABC9C;" floating>CPF</ion-label>
             <ion-input type="tel" [brmasker]="{mask:'000.000.000-00', len:14}" [(ngModel)]="cpfUsuario"></ion-input>
         </ion-item>

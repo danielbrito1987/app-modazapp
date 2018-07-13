@@ -47,8 +47,16 @@
                 <ion-input [(ngModel)]="contato" type="tel" [brmasker]="{mask:'(00) 00000-0000', len:15}"></ion-input>
             </ion-item>                
             <ion-item>
-                <ion-label color="secondary" style="color: #1ABC9C;" floating>End.Entrega/Inform./Obs.</ion-label>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>End.Entrega</ion-label>
                 <ion-input [(ngModel)]="endereco" type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>Número</ion-label>
+                <ion-input [(ngModel)]="numero" type="tel"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>Bairro</ion-label>
+                <ion-input [(ngModel)]="bairro" type="text"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label color="secondary" style="color: #1ABC9C;"floating>Forma de Pagamento</ion-label>

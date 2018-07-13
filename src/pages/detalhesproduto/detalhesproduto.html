@@ -66,7 +66,7 @@
             </ion-card-content>
             <ion-row>
                 <ion-col>
-                <ion-item>
+                <ion-item *ngIf="navegacao == 'Varejo'">
                     <!-- <ion-icon name="md-pricetag" color="secondary" item-start small></ion-icon> -->
                     <h2 item-start><strong>Vlr. Varejo:</strong></h2>
                     <h2 item-start>R$ {{ item.Valor | number : '1.2-2' }}</h2>
@@ -75,7 +75,7 @@
             </ion-row>
             <ion-row>
                 <ion-col>
-                <ion-item *ngIf="tipoUsuario == 'PJ' && item.ValorAtacado != 0">
+                <ion-item *ngIf="navegacao == 'Atacado'">
                     <!-- <ion-icon name="md-pricetags" color="secondary" item-start small></ion-icon> -->
                     <h2 item-start><strong>Vlr. Atacado:</strong></h2>
                     <h2 item-start>R$ {{ item.ValorAtacado | number : '1.2-2' }}</h2>
@@ -93,8 +93,8 @@
 
             <div id="div{{ est.tamanho }}" style="display:none" *ngFor="let est of qtdPedido">
                 <ion-item padding>
-                    <ion-label color="secondary" style="color: #1ABC9C;"floating>{{ est.tamanho }}</ion-label>
-                    <ion-input [(ngModel)]="est.qtd" [ngModelOptions]="{standalone: true}" type="tel"></ion-input>
+                    <ion-label color="secondary" style="color: #1ABC9C;" stacked>Qtd. {{ est.tamanho }}</ion-label>
+                    <ion-input [(ngModel)]="est.qtd" [ngModelOptions]="{standalone: true}" type="tel" placeholder="Quantidade"></ion-input>
                 </ion-item>
             </div>
 

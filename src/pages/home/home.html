@@ -1,7 +1,10 @@
-<ion-header>
-  <ion-navbar color="primary">
-    <button ion-button menuToggle>
-        <ion-icon name="menu"></ion-icon>
+<ion-header>    
+  <ion-navbar color="primary">    
+    <button ion-button menuToggle color="secondary">
+        <ion-icon ios="ios-menu" md="md-menu"></ion-icon>
+    </button>
+    <button *ngIf="this.conexao === false" ion-button icon-only>
+        <ion-icon ios="ios-wifi" md="md-wifi" color="danger"></ion-icon>
     </button>
     <div style="text-align:center">
       <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
@@ -10,15 +13,13 @@
     <ion-buttons end>
       <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
         <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-      </button>      
-    </ion-buttons>
-    <ion-buttons end>
-      <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-          <ion-icon ios="ios-person" md="md-person"></ion-icon>
       </button>
+      <!-- <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+          <ion-icon ios="ios-person" md="md-person"></ion-icon>
+      </button> -->
     </ion-buttons>
   </ion-navbar>
-  <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
+  <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar Loja"></ion-searchbar>
 </ion-header>
 
 <ion-content>
@@ -52,18 +53,22 @@
       </ion-refresher-content>
     </ion-refresher>
 
-  <ion-card *ngFor="let item of items" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
-      <img src="{{ item.Imagem }}" />
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="{{ item.Logomarca }}" />
-        </ion-avatar>      
-        <ion-card-content style="padding: 0">
-          <h2>{{ item.Nome }}</h2>
-          <p>{{ item.Endereco }}</p>
-          <p>{{ item.Cidade }} - {{ item.Estado }}</p>
-          <p>{{ item.Telefone }}</p>
-        </ion-card-content>
-      </ion-item>
-  </ion-card>
+  <div *ngFor="let item of items">
+    <!-- <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">     -->
+    <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">    
+        <img src="{{ item.Imagem }}" />
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="{{ item.Logomarca }}" />
+          </ion-avatar>      
+          <ion-card-content style="padding: 0">
+            <h2>{{ item.Nome }}</h2>
+            <p>{{ item.Endereco }}</p>
+            <p>{{ item.Cidade }} - {{ item.Estado }}</p>
+            <p>{{ item.Telefone }}</p>
+          </ion-card-content>
+        </ion-item>
+      <h2 *ngIf="items.length <= 0">Nenhuma loja encontrada na sua localização.</h2>
+    </ion-card>
+  </div>
 </ion-content>

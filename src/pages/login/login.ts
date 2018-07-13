@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
 import { HomePage } from '../home/home';
 import { CadastroPage } from '../cadastro/cadastro';
+import { TabsPage } from '../tabs/tabs';
 
 @Component({
     selector: 'page-login',
@@ -17,7 +18,8 @@ export class LoginPage{
     email: string;
     
     constructor(public navCtrl: NavController, private http: HttpClient, private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController){
-        this.form = new FormGroup({ Login: new FormControl(), Senha: new FormControl() });        
+        this.form = new FormGroup({ Login: new FormControl(), Senha: new FormControl() });
+        this.email = '';
     }
 
     Login(): void{
@@ -27,11 +29,13 @@ export class LoginPage{
         //this.http.post('http://localhost:65417/api/Login', this.form.value).subscribe(data =>{
             if(data != null){
                 if(data["Usuario"] != null){
-                    console.log(data);
                     this.token = data["Token"];
                     localStorage.setItem("tokenLogin", this.token);
                     localStorage.setItem("IdUsuario", data["IdUsuario"]);
                     localStorage.setItem("TipoUsuario", data["Tipo"]);
+                    localStorage.setItem('NomeUsuario', data['Usuario']);
+                    localStorage.setItem('CpfUsuario', data['CPF']);
+                    localStorage.setItem('EmailUsuario', data['Email']);
                     this.getPedidos();             
                     this.goRootPage();                    
                     this.showToast('top', 'Bem vindo ' + data["Usuario"] + '!');   
@@ -52,6 +56,7 @@ export class LoginPage{
                 }
             }
         }, (error) =>{
+            console.log(error);
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
             this.loading.dismiss();
             this.goRootPage();
@@ -105,7 +110,7 @@ export class LoginPage{
     }
 
     goRootPage(): void{
-        this.navCtrl.setRoot(HomePage);
+        this.navCtrl.setRoot(TabsPage);
         this.navCtrl.popToRoot();
     }
 

@@ -57,7 +57,7 @@ export class FeedbackPage{
         const options: CameraOptions = {
             destinationType: this.camera.DestinationType.DATA_URL,
             sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-            encodingType: this.camera.EncodingType.PNG,
+            encodingType: this.camera.EncodingType.JPEG,
             targetWidth: 850,
             targetHeight: 900
         }
@@ -65,7 +65,7 @@ export class FeedbackPage{
         this.showLoader();
         
         this.camera.getPicture(options).then((imageData) => {            
-            this.imageURI = "data:image/png;base64," + imageData;
+            this.imageURI = "data:image/jpeg;base64," + imageData;
             this.loading.dismiss();
         }, (err) => {
             console.log(err);
@@ -122,6 +122,7 @@ export class FeedbackPage{
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }

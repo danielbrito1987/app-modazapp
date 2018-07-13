@@ -22,35 +22,20 @@ export class ProdutosPage{
     loading: any;
     idLoja: any;
     idCarrinho: any;
-    qtdP: any;
-    qtdM: any;
-    qtdG: any;
-    qtdGG: any;
-    qtdXG: any;
-    qtdXGG: any;
     tam: any;
     showLoad: boolean;
     dataRegistro: any;
     usuarioLogado: boolean;
     tipoUsuario: any;
-    page = 0;
-    perPage = 0;
-    totalData = 0;
-    totalPage = 0;
+    page = 1;
     errorMessage: string;
 
     constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public provider: ProdutoProvider){
-            this.qtdP = 0;
-            this.qtdM = 0;
-            this.qtdG = 0;
-            this.qtdGG = 0;
-            this.qtdXG = 0;
-            this.qtdXGG = 0;
             this.tam = "P";
             this.showLoad = true;
             this.idLoja = this.navParams.get('IdLoja');
-            this.tipoUsuario = localStorage.getItem('TipoUsuario');
+            this.tipoUsuario = localStorage.getItem('TipoUsuario');            
 
             this.initializeItems();
             this.usuarioLogado = this.validaLogin();
@@ -60,9 +45,12 @@ export class ProdutosPage{
         if(this.showLoad)
             this.showLoader();
                         
-            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
+            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
+            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
                 this.items = data;
+                this.page = this.page + 1;
+
+                this.produtos.push(this.items);
                                 
                 this.loading.dismiss();
             }, (error) =>{
@@ -74,21 +62,13 @@ export class ProdutosPage{
 
     doInfinite(infiniteScroll){
         setTimeout(() => {
-            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLoja?id=' + this.idLoja).subscribe(data =>{
+            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
+            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
                 this.items = data;
-                
-                if(this.perPage < this.items.length){
-                    for(let i = this.perPage; i < this.perPage + 4; i++){
-                        if(data[i] != undefined)
-                            this.produtos.push({IdProduto: data[i].IdProduto, Imagem: data[i].Imagem, Descricao: data[i].Descricao, Valor: data[i].Valor});
-                    }
+                this.page = this.page + 1;
 
-                    if(this.perPage < this.items.length){
-                        this.perPage += 4;
-                    }
-                }
-                
+                this.produtos.push(this.items);
+                                                
                 this.loading.dismiss();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
@@ -97,7 +77,7 @@ export class ProdutosPage{
             });
 
             infiniteScroll.complete();
-        }, 7000);
+        }, 2000);
     }
 
     getItems(ev:any){
@@ -150,6 +130,7 @@ export class ProdutosPage{
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }
@@ -158,13 +139,13 @@ export class ProdutosPage{
         if(this.showLoad)     
             this.showLoader();
 
-        var dados = { 'IdProduto': idProduto, 'QtdPedidoP': this.qtdP, 'QtdPedidoM': this.qtdM, 'QtdPedidoG': this.qtdG, 'QtdPedidoGG': this.qtdGG, 'QtdPedidoXG': this.qtdXG, 'QtdPedidoXGG': this.qtdXGG, 'Usuario': localStorage.getItem("tokenLogin"), 'IdLoja': this.idLoja, "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam };
+        var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), 'IdLoja': this.idLoja, "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam };
 
-        if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
-            this.loading.dismiss();
-            this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
-        }
-        else
+        // if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
+        //     this.loading.dismiss();
+        //     this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
+        // }
+        // else
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             localStorage.setItem("Produto", idProduto);
 

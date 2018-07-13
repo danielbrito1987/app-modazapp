@@ -12,6 +12,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
 import { LojasProvider } from '../../providers/lojas/lojas';
 import { ProdutoProvider } from '../../providers/produto/produto';
+import { Network } from '@ionic-native/network';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @Component({
   selector: 'page-home',
@@ -30,13 +32,43 @@ export class HomePage {
   results: any;
   cidade: any;
   uf: any;
+  conexao: boolean;
+  rootPage: any;
   
-  constructor(public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider,
+  constructor(private geolocation: Geolocation, private network: Network, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
       this.showLoad = true;
-      //this.obterCidade();
+      this.obterGeolocalizacao();
       this.initializeItems();
       this.usuarioLogado = this.validaLogin();
+
+      this.network.onDisconnect().subscribe(() => {
+        if(this.network.type === 'wifi'){                    
+          this.conexao = false;
+        }
+
+        if(this.network.type === '3g'){
+          this.conexao = false;
+        }
+
+        if(this.network.type === '4g'){
+          this.conexao = false;
+        }
+      });
+
+      this.network.onConnect().subscribe(() => {
+        if(this.network.type === 'wifi'){
+          this.conexao = true;
+        }
+
+        if(this.network.type === '3g'){
+          this.conexao = true;
+        }
+
+        if(this.network.type === '4g'){
+          this.conexao = true;
+        }
+      });
   }  
   
   initializeItems(): void{
@@ -46,17 +78,19 @@ export class HomePage {
     if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
         this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
         //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
-        this.items = data;
-        localStorage.setItem('Lojas', JSON.stringify(data));
-        this.loading.dismiss();
+          this.items = data;
+
+          localStorage.setItem('Lojas', JSON.stringify(data));
+
+          this.loading.dismiss();
       }, (error) =>{
         this.showAlert('Erro', 'Falha na comunicação com o servidor');
         this.loading.dismiss();
       });
-    }else{
-      this.items = JSON.parse(localStorage.getItem('Lojas'));
-      this.loading.dismiss();
-    }
+    } else{
+       this.items = JSON.parse(localStorage.getItem('Lojas'));
+       this.loading.dismiss();
+     }
     
     // this.lojasProvider.getAll(this.searchText)
     //   .then((result: any[]) => {
@@ -66,17 +100,25 @@ export class HomePage {
     // });
   }
 
-  obterCidade(){
-    if(navigator){
-      navigator.geolocation.getCurrentPosition(pos => {
-        this.http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + pos.coords.latitude + ',' + pos.coords.longitude).subscribe(data => {
-          this.results = data;
-          this.cidade = this.results.results[1].address_components[4].short_name;
-          this.uf = this.results.results[1].address_components[6].short_name;
-          console.log(this.cidade + '-' + this.uf);
-        })
-      })
-    }
+  obterGeolocalizacao(){
+    let watch = this.geolocation.watchPosition();
+
+    watch.subscribe((data) => {
+      this.obterCidade(data.coords.latitude, data.coords.longitude);
+    });
+  }
+
+  obterCidade(lat: any, long: any){
+    this.http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long).subscribe(data => {
+      console.log(data);
+      this.results = data;
+      this.cidade = this.results.results[0].address_components[3].short_name;
+      this.uf = this.results.results[0].address_components[5].short_name;
+      // this.cidade = this.results.results[1].address_components[4].short_name;
+      // this.uf = this.results.results[1].address_components[6].short_name;
+      localStorage.setItem('Cidade', this.cidade);
+      localStorage.setItem('UF', this.uf);
+    })
   }
   
   showLoader(){    
@@ -144,6 +186,7 @@ export class HomePage {
     localStorage.setItem("tokenLogin", "");
     localStorage.setItem("TipoUsuario", "");
     localStorage.setItem("IdUsuario", "");
+    localStorage.setItem("NomeUsuario", "");
     this.goRootPage();
     this.showToast("top", "Logoff realizado!");
   }

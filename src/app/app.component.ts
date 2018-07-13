@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
-import { Platform, ToastController, AlertController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Platform, ToastController, AlertController, MenuController, ModalController, Nav } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { OneSignal } from '@ionic-native/onesignal';
+import { AppVersion } from '@ionic-native/app-version';
+import { PerfilPage } from '../pages/perfil/perfil';
+import { LoginPage } from '../pages/login/login';
+import { ModalNavegacao } from '../modals/navegacao/navegacao';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,24 +18,80 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 export class MyApp {
   rootPage:any = TabsPage;
   dataRegistroCarrinho: any;
+  versao: any = "1.0.1.3";
+  usuarioLogado: boolean;
+  nomeUsuario: any = "Bem Vindo!";
+  @ViewChild(Nav) nav: Nav;
 
-  constructor(public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation, private androidPermissions: AndroidPermissions) {
+  constructor(private modalCtrl: ModalController, private appVersion: AppVersion, private oneSignal: OneSignal, public menuCtrl: MenuController, public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.  
+      // Here you can do any higher level native things you might need.
+      setTimeout(function(){
+        splashScreen.hide();
+      }, 500);
+
       localStorage.clear();
             
       statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#11856E');
+
+      this.oneSignal.startInit('246b0a5b-d522-453e-b08f-7ab8707852e0');
+
+      this.oneSignal.getIds().then(data => {
+        localStorage.setItem('PlayerId', data.userId);
+      })
+            
+      this.oneSignal.endInit();
+
+      // setTimeout(() => {
+      //   this.appVersion.getVersionNumber().then(value => {
+      //     this.versao = value;
+      //   });
+      // });
+
+      setInterval(() => {
+        this.usuarioLogado = this.validaLogin();
+      }, 1000);
       
       this.openHomePage(splashScreen);
-
+      //this.openModalNavegacao();
     });
   }
 
-  private openHomePage(splashScreen: SplashScreen) {
-    splashScreen.hide();
+  private openHomePage(splashScreen: SplashScreen) {    
     this.rootPage = TabsPage;
+  }
+
+  openPerfilPage(){
+    this.nav.push(PerfilPage);
+    this.menuCtrl.close();
+  }
+
+  openLoginPage(){
+    this.nav.push(LoginPage);
+    this.menuCtrl.close();
+  }
+
+  openModalNavegacao(){
+    let modal = this.modalCtrl.create(ModalNavegacao);
+    setTimeout(() => {
+      modal.present();
+    });
+  }
+
+  goRootPage(): void{
+    this.nav.setRoot(TabsPage);
+    this.nav.popToRoot();    
+  }
+
+  logoff(){
+    this.menuCtrl.close();
+    localStorage.setItem("tokenLogin", "");
+    localStorage.setItem("TipoUsuario", "");
+    localStorage.setItem("IdUsuario", "");
+    this.goRootPage();
+    this.showToast("top", "Logoff realizado!");
   }
     
   showToast(position: string, msg: string){
@@ -51,5 +111,15 @@ export class MyApp {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  validaLogin(){
+    if(localStorage.getItem("tokenLogin") != null && localStorage.getItem("tokenLogin")){
+      this.nomeUsuario = localStorage.getItem("NomeUsuario");
+      return true;
+    }else{
+      this.nomeUsuario = "Bem Vindo!"
+      return false;
+    }
   }
 }

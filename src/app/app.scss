@@ -68,4 +68,12 @@ button[ion-fab] {
       padding: 4px 8px;
       border-radius: 4px;
   }
+
+  ion-title{
+      text-align: left !important;
+  }
+
+  .toolbar-title{
+      min-width: 200px !important;
+  }
 }

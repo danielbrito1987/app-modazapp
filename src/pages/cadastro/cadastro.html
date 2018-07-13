@@ -1,18 +1,22 @@
 <ion-header>
     <ion-navbar color="primary">
+        <button ion-button menuToggle color="secondary">
+            <ion-icon ios="ios-menu" md="md-menu"></ion-icon>
+        </button>
+        <button *ngIf="this.conexao === false" ion-button icon-only>
+            <ion-icon ios="ios-wifi" md="md-wifi" color="danger"></ion-icon>
+        </button>
         <div style="text-align:center">
             <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
         </div>
         <ion-title></ion-title>
         <ion-buttons end>
             <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
-                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-            </button>      
-        </ion-buttons>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
             </button>
+            <!-- <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button> -->
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -41,6 +45,10 @@
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>E-mail</ion-label>
                 <ion-input formControlName="Email" type="email"></ion-input>
             </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C;" floating>Telefone</ion-label>
+                <ion-input formControlName="Telefone" type="tel" [brmasker]="{mask:'(00) 00000-0000', len:15}"></ion-input>
+            </ion-item>
             <ion-item *ngIf="Tipo == 'PF'">
                 <ion-label color="secondary" style="color: #1ABC9C;"floating>Sexo</ion-label>
                 <ion-select formControlName="Sexo" cancelText="Cancelar" doneText="OK">
@@ -57,6 +65,18 @@
             <ion-item>
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>Senha</ion-label>
                 <ion-input formControlName="Senha" type="password"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C; font-size: 12px !important;" floating>Qual loja de {{ cidade }} você gostaria de ver no<br /> MODAZAPP?</ion-label>
+                <ion-input color="danger" formControlName="Pergunta1" type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C; font-size: 12px !important;" floating>Qual loja em {{ cidade }} você costuma comprar<br /> roupas, acessórios, calçados e artigos de moda?</ion-label>
+                <ion-input color="danger" formControlName="Pergunta2" type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="secondary" style="color: #1ABC9C; font-size: 12px !important;" floating>Você usaria o MODAZAPP para fazer compras?</ion-label>
+                <ion-input formControlName="Pergunta3" type="text"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>Li e aceito as políticas de uso do ModaZapp.</ion-label>

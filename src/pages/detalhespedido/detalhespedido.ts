@@ -23,13 +23,15 @@ export class DetalhesPedidoPage{
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public navParams: NavParams,
         private http: HttpClient, public toastCtrl: ToastController, public alertCtrl: AlertController){
             this.codPedido = this.navParams.get('CodPedido');
-            this.initializeItems();      
+            this.initializeItems();
             this.usuarioLogado = this.validaLogin();                  
     }
 
     initializeItems(){
         this.getPedidosPorLoja();
+
         this.showLoader();
+
         var dados = { 'CodPedido': this.codPedido };
 
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
@@ -98,6 +100,7 @@ export class DetalhesPedidoPage{
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }

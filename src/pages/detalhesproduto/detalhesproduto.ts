@@ -6,8 +6,9 @@ import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { FeedbackPage } from '../feedback/feedback';
-//import { LocalNotifications } from '@ionic-native/local-notifications';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import { EspecificacaoProdutoPage } from '../especicifacaoproduto/especificacaoproduto';
+import { OneSignal } from '@ionic-native/onesignal';
 import * as moment from 'moment';
 import * as $ from 'jquery';
 
@@ -32,23 +33,36 @@ export class DetalhesProdutoPage{
     esconderDiv: boolean;
     estoque = [];
     qtdPedido = [];
+    carrinho = [];
+    totalQtd: number;
+    valorProduto: number;
+    navegacao: string;
+    divAnterior: string;
 
-    constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
-        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
+    constructor(private oneSignal: OneSignal, public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
+        public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, private localNotification: LocalNotifications){
             this.tam = "P";
             this.showLoad = true;
             this.idProduto = this.navParams.get('IdProduto');            
             this.usuarioLogado = this.validaLogin();
             this.tipoUsuario = localStorage.getItem('TipoUsuario');
+            this.navegacao = localStorage.getItem('Navegacao');
             this.esconderDiv = false;            
             this.initializeItems();
     }
 
     hideDiv(id: string){
-        if($("#div" + id).is(":visible")){
-            $("#div" + id).hide();
-        }else{
-            $("#div" + id).show();
+        if(this.divAnterior == ""){
+            $('#div' + id).show();
+
+            this.divAnterior = id;
+        }
+        else
+        if(this.divAnterior != id){
+            $('#div' + this.divAnterior).hide();
+            $('#div' + id).show();
+
+            this.divAnterior = id;
         }
     }
 
@@ -84,6 +98,8 @@ export class DetalhesProdutoPage{
         this.http.get('https://api.modazapp.online/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
         //this.http.get('http://localhost:65417/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
             this.items = data;
+            localStorage.setItem('DescricaoProduto', data['Descricao']);
+            this.valorProduto = parseFloat(data['Valor']);
             this.estoque = data[0].Estoque.split(',');
 
             this.estoque.forEach(element => {            
@@ -152,6 +168,7 @@ export class DetalhesProdutoPage{
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }
@@ -165,11 +182,17 @@ export class DetalhesProdutoPage{
         var qtd = [];
 
         this.qtdPedido.forEach(element => {
+            this.totalQtd += element.qtd;
             qtd.push(element.tamanho + ':' + parseFloat(element.qtd != "" ? element.qtd : 0));
         });
+
+        this.valorProduto = this.valorProduto * this.totalQtd;
         
         var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja, 'QtdPedido': JSON.stringify(qtd) };
                 
+        this.carrinho.push([{ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price-cents': this.valorProduto }]);
+
+        localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
         // if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
         //     this.loading.dismiss();
         //     this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
@@ -209,18 +232,20 @@ export class DetalhesProdutoPage{
     }
 
     agendarNotificacao(){
-        let dateobject = moment(this.dataRegistro).toDate();
-        this.isAndroid = true;
-        this.dataRegistro = new Date(new Date().getHours() + 1);
-        localStorage.setItem('ExpirarCarrinho', this.dataRegistro);
-                
-        // this.localNotifications.schedule({
-        //   id: 1,
-        //   title: 'Atenção',
-        //   sound: this.isAndroid ? 'file://sound.mp3': 'file://beep.caf',
-        //   text: 'Você tem mais 1 hora para finalizar o seu pedido.',
-        //   at: dateobject
-        // });
+        //let dateobject = moment(this.dataRegistro).toDate();
+        if(localStorage.getItem("ExpirarCarrinho") != null && localStorage.getItem("ExpirarCarrinho") != ""){
+            this.isAndroid = true;
+            this.dataRegistro = new Date(new Date().getHours() + 1);
+            localStorage.setItem('ExpirarCarrinho', this.dataRegistro);
+                    
+            this.localNotification.schedule({
+                id: 1,
+                title: 'Atenção',
+                sound: this.isAndroid ? 'file://sound.mp3': 'file://beep.caf',
+                text: 'Você tem mais 1 hora para finalizar o seu pedido.',
+                trigger: { at: this.dataRegistro }
+            });
+        }
     }
 
     doRefresh(refresher) {

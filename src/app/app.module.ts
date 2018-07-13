@@ -21,14 +21,15 @@ import { DetalhesProdutoPage } from '../pages/detalhesproduto/detalhesproduto';
 import { FeedbackPage } from '../pages/feedback/feedback';
 import { EspecificacaoProdutoPage } from '../pages/especicifacaoproduto/especificacaoproduto';
 import { PerfilPage } from '../pages/perfil/perfil';
+import { ModalNavegacao } from '../modals/navegacao/navegacao';
 
+import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { IonicStorageModule } from '@ionic/storage';
-// import { TooltipModule } from 'angular2-tooltips';
 import { Camera } from '@ionic-native/camera';
 
 import { BrMaskerModule } from 'brmasker-ionic-3';
@@ -44,6 +45,10 @@ import { LojasProvider } from '../providers/lojas/lojas';
 import { DatePicker } from '@ionic-native/date-picker';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { TooltipsModule } from 'ionic-tooltips';
+import { Geolocation } from '@ionic-native/geolocation';
+import { OneSignal } from '@ionic-native/onesignal';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -63,18 +68,19 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     FeedbackPage,
     EspecificacaoProdutoPage,
     PerfilPage,
+    ModalNavegacao,
     TabsPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    // BrowserAnimationsModule,
     HttpClientModule,
-    // TooltipModule,
     FormsModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    BrMaskerModule
+    BrMaskerModule,
+    TooltipsModule
+    ///BrowserAnimationsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -94,10 +100,12 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     FeedbackPage,
     EspecificacaoProdutoPage,
     PerfilPage,
+    ModalNavegacao,
     TabsPage
   ],
   providers: [
     StatusBar,
+    AppVersion,
     SplashScreen,
     HttpClientModule,    
     {provide: ErrorHandler, useClass: IonicErrorHandler,},
@@ -113,7 +121,9 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     LojasProvider,
     DatePicker,
     AndroidPermissions,
-    ScreenOrientation
+    ScreenOrientation,
+    Geolocation,
+    OneSignal
   ]
 })
 export class AppModule {

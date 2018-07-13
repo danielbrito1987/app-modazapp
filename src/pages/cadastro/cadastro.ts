@@ -18,14 +18,18 @@ export class CadastroPage {
     Tipo: any;
     usuarioLogado: boolean;
     validaPoliticas: boolean = false;
+    cidade: any;
+    uf: any;
     public CPF = require("cpf_cnpj").CPF;
-    public CNPJ = require("cpf_cnpj").CNPJ;    
+    public CNPJ = require("cpf_cnpj").CNPJ;
     
     constructor(public navCtrl: NavController, private http: HttpClient, public alertCtrl: AlertController, 
         public fbld: FormBuilder, public toastCtrl: ToastController, private loadingCtrl: LoadingController) {
-        this.form = new FormGroup({ Tipo: new FormControl(), Nome: new FormControl(), DataNasc: new FormControl(), Email: new FormControl(), Sexo: new FormControl(), CPF: new FormControl(), Senha: new FormControl(), RazaoSocial: new FormControl(), CNPJ: new FormControl(), chkPol: new FormControl() });
+        this.form = new FormGroup({ Tipo: new FormControl(), Nome: new FormControl(), DataNasc: new FormControl(), Email: new FormControl(), Telefone: new FormControl(), Sexo: new FormControl(), CPF: new FormControl(), Senha: new FormControl(), RazaoSocial: new FormControl(), CNPJ: new FormControl(), chkPol: new FormControl(), Pergunta1: new FormControl(), Pergunta2: new FormControl(), Pergunta3: new FormControl() });
         this.Tipo = "PF";
         this.usuarioLogado = this.validaLogin();
+        this.cidade = localStorage.getItem('Cidade');
+        this.uf = localStorage.getItem('UF');
     }
 
     inserirUsuario(): void{
@@ -45,6 +49,7 @@ export class CadastroPage {
 
                 this.loading.dismiss();
             }, error =>{
+                console.log(error);
                 this.showAlert('Erro', 'Erro ao enviar os dados.');
                 this.loading.dismiss();
             });
@@ -98,6 +103,7 @@ export class CadastroPage {
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }

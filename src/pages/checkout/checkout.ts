@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, NavParams, ToastController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginPage } from '../login/login';
 import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';
@@ -17,21 +17,79 @@ export class CheckoutPage{
     loading: any;
     contato: any;
     endereco: any;
+    numero: any;
+    bairro: any;
+    cidade: any;
     formaPgto: any;
     usuarioLogado: boolean;
+    data: Date = new Date();
+    dtVcto: Date = new Date();
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public localNotification: LocalNotifications,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
             this.contato = "";
             this.endereco = "";
+            this.numero = "";
+            this.bairro = "";
+            this.cidade = "";
             this.formaPgto = "";
             this.usuarioLogado = this.validaLogin();
+
+            // this.http.get("https://api.iugu.com/v1/92FE03E4DB1840C6877548DFE41C6AB6/api_tokens").subscribe(data => {
+            //     console.log(data);
+            // }, (error) => {
+            //     console.log(error);
+            // })
     }
 
-    finalizar(){
+    finalizar(){        
+        // this.Iugu.setApiKey('86e495fbec10b531a639c2d248056063');
+        // this.Iugu.setTimeout(20000);
+        //var iugu = require('iugu')('86e495fbec10b531a639c2d248056063');
+        //var expect = require('chai').expect;        
+        this.dtVcto.setDate(this.data.getDate() + 30);
+
+          var dadosP = 
+          {
+            "email": localStorage.getItem('EmailUsuario'),
+            "due_date": "02/12/2018",
+            "items":[
+                {
+                    "description": "Produto 1",
+                    "quantity": 1,
+                    "price_cents": 50
+                },{
+                    "description": "Produto 2",
+                    "quantity": 1,
+                    "price_cents": 60
+                }],
+          "payer":{
+              "cpf_cnpj": localStorage.getItem('CpfUsuario'),
+              "name": localStorage.getItem('NomeUsuario'),
+              "address":{
+                  "zip_code": "29200000",
+                  "number": "123"
+                }
+            }
+          };
+
+        let headers = new HttpHeaders({
+            'authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+        })
+
+        this.http.post('https://api.iugu.com/v1/invoices', JSON.stringify(dadosP), { headers: headers, responseType: "json", withCredentials: true }).subscribe(data => {
+            console.log(data);
+        }, (error) => {
+            console.log(error);
+        })
+          
+        //   request.post(options, function(err,httpResponse,body){
+        //     console.log(body);
+        //   })
+
         this.showLoader();
 
-        var dados = { 'TokenUsuario': localStorage.getItem('tokenLogin'), 'CodPedido': localStorage.getItem('CodPedido'), 'Contato': this.contato, 'Endereco': this.endereco, 'FormaPgto': this.formaPgto };
+        var dados = { 'TokenUsuario': localStorage.getItem('tokenLogin'), 'CodPedido': localStorage.getItem('CodPedido'), 'Contato': this.contato, 'Endereco': this.endereco, 'Numero': this.numero, 'Bairro': this.bairro, 'Cidade': this.cidade, 'FormaPgto': this.formaPgto };
 
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){            
             this.http.post("https://api.modazapp.online/api/pedidos/", dados).subscribe(data => {
@@ -40,7 +98,27 @@ export class CheckoutPage{
                     this.loading.dismiss();
                     this.goLoginPage();
                 }else{
+                    // var player = { 'cpf_cnpj': localStorage.getItem('CpfUsuario'), 'name': localStorage.getItem('NomeUsuario'), 'phone_prefix': '27', 'phone': this.contato, 'email': localStorage.getItem('EmailUsuario'), 'address': { 'zip_code': 'cep', 'street': this.endereco, 'number': this.numero, 'district': this.bairro, 'city': this.cidade, 'state': 'UF', 'country': 'Brasil', 'complement': '' } };
+                    // var items = localStorage.getItem('ItemIUGU');
+                    // // var dados = { 'email': localStorage.getItem('EmailUsuario'), 'due_date': '2018-08-10', 'items': items, 'payable_with': this.formaPgto, 'player': player, 'order_id': localStorage.getItem("CodPedido") };
+                    // var dados = { 'method': 'bank_slip',  'restrict_payment_method': false, 'customer_id': 1, 'email': localStorage.getItem('EmailUsuario'), 'items': JSON.stringify(items), 'player': JSON.stringify(player), 'order_id': localStorage.getItem("CodPedido") };
+                    
+                    // this.http.post("https://api.iugu.com/v1/charge", JSON.stringify(dados), { headers: new HttpHeaders().set('api_token', '86e495fbec10b531a639c2d248056063').set('Accept', 'application/json')}).subscribe(data => {
+                    //     console.log(data);
+                    // }, (error) => {
+                    //     console.log(error);
+                    // });
+                    
+                    //this.Iugu.invoices.create({ application_fee: 111 });
+                    // expect(iugu.LAST_REQUEST).to.deep.equal({
+                    //     method: 'POST',
+                    //     url: '/v1/invoices',
+                    //     data: { application_fee: 111 }
+                    // });
+                    
+
                     localStorage.setItem("CodPedido", "");
+                    localStorage.setItem("ExpirarCarrinho", "");
                     this.showToast("top", "Pedido Finalizado!");
                     this.localNotification.clearAll();
                     this.loading.dismiss();
@@ -82,6 +160,7 @@ export class CheckoutPage{
         localStorage.setItem("tokenLogin", "");
         localStorage.setItem("TipoUsuario", "");
         localStorage.setItem("IdUsuario", "");
+        localStorage.setItem("NomeUsuario", "");
         this.goRootPage();
         this.showToast("top", "Logoff realizado!");
     }

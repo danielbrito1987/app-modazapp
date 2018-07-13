@@ -12,7 +12,7 @@
     </ion-navbar>
 </ion-header>
         
-<ion-content>   
+<ion-content>
     <div [formGroup]="form">
         <ion-list>
             <ion-item>
@@ -24,10 +24,10 @@
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>Senha</ion-label>
                 <ion-input formControlName="Senha" type="password"></ion-input>
             </ion-item>
-        </ion-list>   
+        </ion-list>
     </div>
     <div padding>
-        <button ion-button color="secondary" block (click)="Login();">Entrar</button>
+        <button ion-button color="secondary" block (click)="Login();" [disabled]="email == ''">Entrar</button>
     </div>
     <div padding>
         <button ion-button color="secondary" block (click)="EsqueciSenha(email);">Esqueci minha senha</button>

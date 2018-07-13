@@ -127,6 +127,7 @@ export class ContactPage {
     localStorage.setItem("tokenLogin", "");
     localStorage.setItem("TipoUsuario", "");
     localStorage.setItem("IdUsuario", "");
+    localStorage.setItem("NomeUsuario", "");
     this.goRootPage();
     this.showToast("top", "Logoff realizado!");
   }

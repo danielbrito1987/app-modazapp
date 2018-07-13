@@ -14,6 +14,7 @@ export class PerfilPage{
     items: any;
     nomeUsuario: string;
     emailusuario: string;
+    telefoneusuario: string;
     cpfUsuario: string;
     dataNasc: string;
     senha: string;
@@ -34,14 +35,17 @@ export class PerfilPage{
                 this.emailusuario = this.items[0].Email;
                 this.cpfUsuario = this.items[0].Cpf;
                 this.dataNasc = this.items[0].DataNasc;
+                this.telefoneusuario = this.items[0].Telefone;
             }else{
                 this.http.get('https://api.modazapp.online/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
                 //this.http.get('http://localhost:65417/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
+                    console.log(data);
                     this.items = data;
                     this.nomeUsuario = data[0].Nome;
                     this.emailusuario = data[0].Email;
                     this.cpfUsuario = data[0].Cpf;
                     this.dataNasc = data[0].DataNasc;
+                    this.telefoneusuario = data[0].Telefone;
                     localStorage.setItem('Perfil', JSON.stringify(data));
                 }, (erro) => {
                     this.showAlert('Erro', 'Falha na comunicação com o servidor.');

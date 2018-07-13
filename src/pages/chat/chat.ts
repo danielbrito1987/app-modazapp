@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Content, ToastController } from 'ionic-angular';
+import { Component, ViewChild, NgZone } from '@angular/core';
+import { NavController, NavParams, Content, ToastController, Platform } from 'ionic-angular';
 
 declare var require: any;
 
@@ -9,42 +9,47 @@ declare var require: any;
 })
 export class ChatPage {
     mensagem: string = "";
-    mensagens: Array<Mensagem>;
+    mensagens: Array<Mensagem> = new Array<Mensagem>();
     context: any = {};
     nome: string = "";
     usuarioLogado: boolean;
     @ViewChild(Content) content: Content;
     
-    constructor(public navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController) {
-        this.mensagens = new Array<Mensagem>();
+    constructor(private platform: Platform, private zone: NgZone, public navCtrl: NavController, private navParams: NavParams, private toastCtrl: ToastController) {
+        //this.mensagens = new Array<Mensagem>();
         this.nome = this.navParams.get("nome");
         this.context.nome = this.nome;
-        this.usuarioLogado = this.validaLogin();        
+        this.usuarioLogado = this.validaLogin();
     }
 
-    ionViewDidEnter() {
-        this.mensagens = new Array<Mensagem>();
-        var that = this;
-
-        var watson = require('watson-developer-cloud');
-
-        var conversation = new watson.ConversationV1({ 
-            username: 'a3b803e5-f77b-48a9-9d90-42f5cd4bfc9a',
-            password: 'kZkJnvcr7a88',
-            version_date: '2018-02-16'
-        });
-
-        conversation.message({
-            workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
-            input: { 'text': '' }
-        }, function (err, response){
-            if(err){
-                console.log("Erro:" + err);
-            }else{                
-                that.mensagens.push(new Mensagem(response.output.text[0], true));
-                //that.tratarRetorno(response.output);
-            }
-        });
+    ionViewDidLoad() {
+        this.platform.ready().then(() => {
+            //this.mensagens = new Array<Mensagem>();
+            var that = this;
+        
+            var watson = require('watson-developer-cloud');
+    
+            var conversation = new watson.ConversationV1({ 
+                username: 'a3b803e5-f77b-48a9-9d90-42f5cd4bfc9a',
+                password: 'kZkJnvcr7a88',
+                version_date: '2018-02-16',
+                url: 'https://gateway.watsonplatform.net/conversation/api'
+            });
+    
+            conversation.message({
+                workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
+                input: { 'text': '' }
+            }, function (err, response){
+                if(err){
+                    console.log("Erro:" + err);
+                }else{
+                    setTimeout(() => {
+                        that.mensagens.push(new Mensagem(response.output.text[0], true));
+                    });
+                    //that.tratarRetorno(response.output);
+                }
+            });
+        });        
     }
 
     enviarMensagem() {
@@ -60,19 +65,24 @@ export class ChatPage {
             var conversation = new watson.ConversationV1({ 
                 username: 'a3b803e5-f77b-48a9-9d90-42f5cd4bfc9a',
                 password: 'kZkJnvcr7a88',
-                version_date: '2018-02-16'
+                version_date: '2018-02-16',
+                url: 'https://gateway.watsonplatform.net/conversation/api'
             });
 
-            conversation.message({
-                workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
-                input: { 'text': this.mensagem }
-            }, function (err, response){
-                if(err){
-                    console.log("Erro:" + err);
-                }else{
-                    that.mensagens.push(new Mensagem(response.output.text[0], true));
-                    //that.tratarRetorno(response.output);
-                }            
+            this.zone.run(() => {
+                conversation.message({
+                    workspace_id: '7d03d059-1797-440b-8f8c-596582685571',
+                    input: { 'text': this.mensagem }
+                }, function (err, response){
+                    if(err){
+                        console.log("Erro:" + err);
+                    }else{
+                        setTimeout(() => {
+                            that.mensagens.push(new Mensagem(response.output.text[0], true));
+                        });
+                        //that.tratarRetorno(response.output);
+                    }            
+                });
             });
 
             this.mensagem = "";

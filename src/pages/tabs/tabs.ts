@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { NavController, NavParams } from 'ionic-angular';
 import { CadastroPage } from '../cadastro/cadastro';
 import { ContactPage } from '../contact/contact';
 import { HomePage } from '../home/home';
@@ -15,7 +15,7 @@ export class TabsPage {
   tab3Root = ContactPage;
   tab4Root = ChatPage;
 
-  constructor() {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
 
   }
 }

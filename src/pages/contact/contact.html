@@ -1,25 +1,26 @@
 <ion-header>
-        <ion-navbar color="primary">
-          <button ion-button menuToggle>
-              <ion-icon name="menu"></ion-icon>
-          </button>
-          <div style="text-align:center">
-            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
-          </div>
-          <ion-title></ion-title>
-          <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
-              <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-            </button>      
-          </ion-buttons>
-          <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-navbar>
-        <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
-      </ion-header>
+  <ion-navbar color="primary">    
+    <button ion-button menuToggle color="secondary">
+        <ion-icon ios="ios-menu" md="md-menu"></ion-icon>
+    </button>
+    <button *ngIf="conexao === false" ion-button icon-only>
+        <ion-icon ios="ios-wifi" md="md-wifi" color="danger"></ion-icon>
+    </button>
+    <div style="text-align:center">
+      <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+    </div>
+    <ion-title></ion-title>
+    <ion-buttons end>
+      <button *ngIf="usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+        <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+      </button>
+      <!-- <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+          <ion-icon ios="ios-person" md="md-person"></ion-icon>
+      </button> -->
+    </ion-buttons>
+  </ion-navbar>
+      <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar Produto"></ion-searchbar>
+    </ion-header>
       
       <ion-content>
           <ion-fab right bottom *ngIf="validaLogin()">
