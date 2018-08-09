@@ -14,6 +14,7 @@ import { LojasProvider } from '../../providers/lojas/lojas';
 import { ProdutoProvider } from '../../providers/produto/produto';
 import { Network } from '@ionic-native/network';
 import { Geolocation } from '@ionic-native/geolocation';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
 
 @Component({
   selector: 'page-home',
@@ -30,12 +31,13 @@ export class HomePage {
   usuarioLogado: boolean;
   pedidos: any;
   results: any;
-  cidade: any;
-  uf: any;
+  cidade: any = "";
+  uf: any = "";
   conexao: boolean;
   rootPage: any;
-  
-  constructor(private geolocation: Geolocation, private network: Network, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider,
+  qtdLojasCidade: any = 0;
+    
+  constructor(private geolocation: Geolocation, private network: Network, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider, public geocoder: NativeGeocoder,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
       this.showLoad = true;
       this.obterGeolocalizacao();
@@ -82,6 +84,12 @@ export class HomePage {
 
           localStorage.setItem('Lojas', JSON.stringify(data));
 
+          this.items.forEach(element => {
+            if(element.Cidade == this.cidade){
+              this.qtdLojasCidade++;
+            }            
+          });
+
           this.loading.dismiss();
       }, (error) =>{
         this.showAlert('Erro', 'Falha na comunicação com o servidor');
@@ -101,10 +109,11 @@ export class HomePage {
   }
 
   obterGeolocalizacao(){
-    let watch = this.geolocation.watchPosition();
-
-    watch.subscribe((data) => {
-      this.obterCidade(data.coords.latitude, data.coords.longitude);
+    this.geolocation.getCurrentPosition().then((data) => {
+      this.geocoder.reverseGeocode(data.coords.latitude, data.coords.longitude).then(result => {
+        console.log(result);
+      })
+      //this.obterCidade(data.coords.latitude, data.coords.longitude);
     });
   }
 
@@ -112,8 +121,8 @@ export class HomePage {
     this.http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long).subscribe(data => {
       console.log(data);
       this.results = data;
-      this.cidade = this.results.results[0].address_components[3].short_name;
-      this.uf = this.results.results[0].address_components[5].short_name;
+      this.cidade = this.results.results[0].address_components[2].short_name;
+      this.uf = this.results.results[0].address_components[4].short_name;
       // this.cidade = this.results.results[1].address_components[4].short_name;
       // this.uf = this.results.results[1].address_components[6].short_name;
       localStorage.setItem('Cidade', this.cidade);
@@ -220,5 +229,26 @@ export class HomePage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  removeAcentuacao(palavra){
+    var string = palavra;
+
+    var mapaAcentosHex = {
+      a : /[\xE0-\xE6]/g,
+      e : /[\xE8-\xEB]/g,
+      i : /[\xEC-\xEF]/g,
+      o : /[\xF2-\xF6]/g,
+      u : /[\xF9-\xFC]/g,
+      c : /\xE7/g,
+      n : /\xF1/g
+    };
+
+    for(var letra in mapaAcentosHex){
+      var expressaoRegular = mapaAcentosHex[letra];
+      palavra = string.replace(expressaoRegular, letra);
+    }
+
+    return string;
   }
 }

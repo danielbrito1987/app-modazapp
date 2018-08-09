@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, ToastController, LoadingController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { LoginPage } from '../login/login';
 import { HomePage } from '../home/home';
@@ -35,12 +35,10 @@ export class CadastroPage {
     inserirUsuario(): void{
         if(this.validaPoliticas){
             this.showLoader();
-
-            this.http.post("https://api.modazapp.online/api/usuarios", this.form.value).subscribe(data =>{
+            this.http.post("https://api.modazapp.online/api/Usuarios/PostUsuario", this.form.value).subscribe(data =>{
             //this.http.post("http://localhost:65417/api/usuarios", this.form.value).subscribe(data =>{
-                if(data["idUsuario"] != null){                
+                if(data["idUsuario"] != null){                    
                     this.showAlert('Sucesso', 'Cadastro realizado com sucesso.');
-                    this.form.reset();                
                     this.loading.dismiss();
                 } else {
                     this.showAlert('Alerta', data.toString());
@@ -53,9 +51,34 @@ export class CadastroPage {
                 this.showAlert('Erro', 'Erro ao enviar os dados.');
                 this.loading.dismiss();
             });
+            this.cadastroIugu();
         }else{
             this.showAlert('Atenção', 'Marque a opção Li e Aceito as Políticas de Uso do ModaZapp.');
         }
+    }
+
+    cadastroIugu(){
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json',
+              'Access-Control-Allow-Origin': 'http://localhost:8100',
+              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+            })
+        };
+        
+        var cliente = {
+            email: this.form.value['Email'],
+            name: this.form.value['Nome'],
+            cpf_cnpj: this.form.value['CPF']
+        };
+
+        this.http.post('/iugu/customers', cliente, httpOptions).subscribe(data => {
+            console.log(data);
+        }, (error) => {
+            console.log(error);
+        });
     }
 
     goLoginPage(): void{

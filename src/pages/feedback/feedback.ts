@@ -37,7 +37,7 @@ export class FeedbackPage{
             this.idUsuario = localStorage.getItem("IdUsuario");
             this.usuarioLogado = this.validaLogin();
             this.getPedidos();
-            this.getLojas();
+            //this.getLojas();
     }
 
     getPedidos(){
@@ -45,7 +45,7 @@ export class FeedbackPage{
     }
 
     getLojas(){
-        this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
+        this.http.get('https://api.modazapp.online/api/Pedidos/GetLojasDoPedido?id=' + this.pedido).subscribe(data =>{
             //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
             this.lojas = data;
         }, (error) =>{

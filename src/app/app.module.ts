@@ -21,6 +21,10 @@ import { DetalhesProdutoPage } from '../pages/detalhesproduto/detalhesproduto';
 import { FeedbackPage } from '../pages/feedback/feedback';
 import { EspecificacaoProdutoPage } from '../pages/especicifacaoproduto/especificacaoproduto';
 import { PerfilPage } from '../pages/perfil/perfil';
+import { EnderecosPage } from '../pages/enderecos/enderecos';
+import { NovoEnderecoPage } from '../pages/novoEndereco/novoEndereco';
+import { PagamentoPage } from '../pages/pagamento/pagamento';
+import { NovoPagamentoPage } from '../pages/novoPagamento/novoPagamento';
 import { ModalNavegacao } from '../modals/navegacao/navegacao';
 
 import { AppVersion } from '@ionic-native/app-version';
@@ -48,6 +52,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { TooltipsModule } from 'ionic-tooltips';
 import { Geolocation } from '@ionic-native/geolocation';
 import { OneSignal } from '@ionic-native/onesignal';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -68,6 +73,10 @@ import { OneSignal } from '@ionic-native/onesignal';
     FeedbackPage,
     EspecificacaoProdutoPage,
     PerfilPage,
+    EnderecosPage,
+    NovoEnderecoPage,
+    PagamentoPage,
+    NovoPagamentoPage,
     ModalNavegacao,
     TabsPage
   ],
@@ -100,6 +109,10 @@ import { OneSignal } from '@ionic-native/onesignal';
     FeedbackPage,
     EspecificacaoProdutoPage,
     PerfilPage,
+    EnderecosPage,
+    NovoEnderecoPage,
+    PagamentoPage,
+    NovoPagamentoPage,
     ModalNavegacao,
     TabsPage
   ],
@@ -123,7 +136,8 @@ import { OneSignal } from '@ionic-native/onesignal';
     AndroidPermissions,
     ScreenOrientation,
     Geolocation,
-    OneSignal
+    OneSignal,
+    NativeGeocoder
   ]
 })
 export class AppModule {

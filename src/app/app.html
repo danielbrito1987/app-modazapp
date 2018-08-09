@@ -12,6 +12,14 @@
                 <ion-icon color="secondary" item-start ios="ios-contacts" md="md-contacts"></ion-icon>
                 Perfil
             </button>
+            <button  *ngIf="usuarioLogado === true" ion-item (click)="openPagamentoPage()">
+                <ion-icon color="secondary" item-start ios="ios-card" md="md-card"></ion-icon>
+                Pagamento
+            </button>
+            <button  *ngIf="usuarioLogado === true" ion-item (click)="openEnderecosPage()">
+                <ion-icon color="secondary" item-start ios="ios-pin" md="md-pin"></ion-icon>
+                Meus Endereços
+            </button>
             <button ion-item (click)="openModalNavegacao()">
                 <ion-icon color="secondary" item-start ios="ios-settings" md="md-settings"></ion-icon>
                 Navegação

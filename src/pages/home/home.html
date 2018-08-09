@@ -53,9 +53,12 @@
       </ion-refresher-content>
     </ion-refresher>
 
+  <div padding *ngIf="qtdLojasCidade <= 0">
+    <p text-center><strong>Que Pena! Nenhuma loja encontrada para a sua localidade. Em breve terá!</strong></p>
+  </div>
   <div *ngFor="let item of items">
-    <!-- <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">     -->
-    <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">    
+    <!-- <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">     -->      
+    <ion-card *ngIf="item.Cidade.toUpperCase() === cidade.toUpperCase()" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">      
         <img src="{{ item.Imagem }}" />
         <ion-item>
           <ion-avatar item-start>

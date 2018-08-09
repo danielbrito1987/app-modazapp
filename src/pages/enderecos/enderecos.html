@@ -1,0 +1,71 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <div style="text-align:center">
+        <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
+        </div>
+        <ion-title></ion-title>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
+                <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+            </button>      
+        </ion-buttons>
+        <ion-buttons end>
+            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
+                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+        
+<ion-content>
+    <ion-fab right bottom *ngIf="validaLogin()">
+        <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+        <ion-fab-list side="top">
+            <button ion-fab [navPush]="carrinhoPage">
+            <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            <ion-label>Carrinho</ion-label>
+            </button>
+            <button ion-fab (click)="goPedidosPage();">
+            <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+            <ion-label>Pedidos</ion-label>
+            </button>
+            <button ion-fab (click)="goCamera()">
+                <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+                <ion-label>Comprovante</ion-label>
+            </button>
+            <button ion-fab (click)="logoff()">
+            <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+            <ion-label>Sair</ion-label>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content>
+            pullingIcon="arrow-dropdown"
+            pullingText="Puxe para atualizar"
+            refreshingSpinner="circles"
+            refreshingText="Atualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+        
+    <ion-card *ngFor="let item of items" (click)="goDetalhesEndereco(item.IdEndereco)">
+        <ion-item>
+            <h2>{{ item.Titulo }}</h2>
+            <ion-row>
+                <ion-col>
+                    <p>{{ item.Endereco }}</p>
+                </ion-col>
+                <ion-col>
+                    <p>{{ item.Bairro }} - {{ item.Cidade }} - {{ item.Estado }}</p>
+                </ion-col>
+                <ion-col>
+                    <p>{{ item.Cep }}</p>
+                </ion-col>
+            </ion-row>
+        </ion-item>
+    </ion-card>
+    <div padding>
+        <button ion-button color="secondary" block (click)="novoEndereco();">Novo</button>
+    </div>
+</ion-content>

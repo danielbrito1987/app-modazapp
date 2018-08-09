@@ -2,4 +2,8 @@ page-checkout{
     .fab {
         contain: layout;
     }
+
+    .item-radio-checked.item-ios ion-label{
+        color: #1ABC9C;
+    }
 }

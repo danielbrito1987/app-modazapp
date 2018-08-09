@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController, ToastController, AlertController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
 import { HomePage } from '../home/home';
 import { CadastroPage } from '../cadastro/cadastro';
@@ -55,12 +55,32 @@ export class LoginPage{
                     this.goRootPage();
                 }
             }
+            this.buscarClienteIugu();
         }, (error) =>{
             console.log(error);
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
             this.loading.dismiss();
             this.goRootPage();
         });
+    }
+
+    buscarClienteIugu(){
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json',
+              'Access-Control-Allow-Origin': 'http://localhost:8100',
+              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+            })
+        };
+
+        this.http.get('/iugu/customers?query=' + localStorage.getItem('EmailUsuario'), httpOptions).subscribe(data => {
+            console.log(data);
+            localStorage.setItem('IdIugu', data['items'][0]['id']);
+        }, (error) => {
+            console.log(error);
+        })
     }
 
     getPedidos(){

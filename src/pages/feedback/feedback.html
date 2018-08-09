@@ -56,14 +56,14 @@
             </ion-item>
             <ion-item>
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>Pedido</ion-label>
-                <ion-select [(ngModel)]="pedido">
-                    <ion-option *ngFor="let item of pedidos" value="{{ item.CodPedido }}">{{ item.CodPedido }}</ion-option>
+                <ion-select [(ngModel)]="pedido" (ionChange)="getLojas()">
+                    <ion-option  *ngFor="let item of pedidos" value="{{ item.CodPedido }}">{{ item.CodPedido }}</ion-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label color="secondary" style="color: #1ABC9C;" floating>Loja</ion-label>
                 <ion-select [(ngModel)]="loja">
-                    <ion-option *ngFor="let item of lojas" value="{{ item.IdLoja }}">{{ item.Nome }}</ion-option>
+                    <ion-option *ngFor="let item of lojas" value="{{ item.idLoja }}">{{ item.nomeLoja }}</ion-option>
                 </ion-select>
             </ion-item>
             <ion-item>

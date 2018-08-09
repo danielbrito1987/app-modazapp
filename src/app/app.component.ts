@@ -9,6 +9,8 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { OneSignal } from '@ionic-native/onesignal';
 import { AppVersion } from '@ionic-native/app-version';
 import { PerfilPage } from '../pages/perfil/perfil';
+import { EnderecosPage } from '../pages/enderecos/enderecos';
+import { PagamentoPage } from '../pages/pagamento/pagamento';
 import { LoginPage } from '../pages/login/login';
 import { ModalNavegacao } from '../modals/navegacao/navegacao';
 
@@ -65,6 +67,16 @@ export class MyApp {
 
   openPerfilPage(){
     this.nav.push(PerfilPage);
+    this.menuCtrl.close();
+  }
+
+  openEnderecosPage(){
+    this.nav.push(EnderecosPage);
+    this.menuCtrl.close();
+  }
+
+  openPagamentoPage(){
+    this.nav.push(PagamentoPage);
     this.menuCtrl.close();
   }
 
