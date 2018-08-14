@@ -26,7 +26,7 @@
     <ion-fab right bottom *ngIf="validaLogin()">
         <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
         <ion-fab-list side="top">
-          <button ion-fab [navPush]="carrinhoPage">
+          <button ion-fab (click)="goCarrinhoPage();">
             <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
             <ion-label>Carrinho</ion-label>
           </button>

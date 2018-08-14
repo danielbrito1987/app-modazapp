@@ -47,18 +47,17 @@
                     <h2>1. Endereço de Entrega</h2>
                 </ion-item>
                 <ion-item>
-                    <h5><strong>Daniel Brito</strong></h5>
-                    <h5>Travessa 22 de Junho, 21</h5>
-                    <h5>Santa Therezinha - Lajinha - MG</h5>
-                    <h5>36980-000</h5>
-                    <h5>(27)99299-0929</h5>                    
+                    <h5><strong>{{ titulo }}</strong></h5>
+                    <h5>{{ endereco }}</h5>
+                    <h5>{{ bairro }} - {{ cidade }} - {{ estado }}</h5>
+                    <h5>{{ cep }}</h5>
                 </ion-item>
                 <ion-row>
                     <ion-col>
-                        <button color="secondary" ion-button icon-start clear small>Adicionar</button>
+                        <button color="secondary" ion-button icon-start clear small (click)="showModalEndereco()">Adicionar</button>
                     </ion-col>
                     <ion-col>
-                        <button color="secondary" ion-button icon-start clear small>Alterar</button>
+                        <button color="secondary" ion-button icon-start clear small (click)="showAlertEnderecos()">Alterar</button>
                     </ion-col>
                 </ion-row>
             </ion-card>
@@ -66,28 +65,28 @@
                 <ion-item>
                     <h2>2. Método de Pagamento</h2>
                 </ion-item>
-                    <ion-list radio-group no-lines>
-                        <ion-item>
-                            <ion-label>Boleto Bancário</ion-label>
-                            <ion-radio value="bank_slip"></ion-radio>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>Cartão de Crédito</ion-label>
-                            <ion-radio value="credit_card"></ion-radio>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>Depósito Bancário</ion-label>
-                            <ion-radio value="deposito"></ion-radio>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>Em Mãos</ion-label>
-                            <ion-radio value="em_maos"></ion-radio>
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>Crediário Próprio</ion-label>
-                            <ion-radio value="crediario"></ion-radio>
-                        </ion-item>
-                    </ion-list>
+                <ion-list radio-group no-lines [(ngModel)]="tokenPagamento">
+                    <ion-item>
+                        <ion-label>Boleto Bancário</ion-label>
+                        <ion-radio value="bank_slip"></ion-radio>
+                    </ion-item>                        
+                    <ion-item>
+                        <ion-label>Depósito Bancário</ion-label>
+                        <ion-radio value="deposito"></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Em Mãos</ion-label>
+                        <ion-radio value="em_maos"></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Crediário Próprio</ion-label>
+                        <ion-radio value="crediario"></ion-radio>
+                    </ion-item>
+                    <ion-item *ngFor="let item of items">
+                        <ion-label>{{ item.description }}</ion-label>
+                        <ion-radio [value]="item.id"></ion-radio>
+                    </ion-item>
+                </ion-list>
             </ion-card>
             <ion-card>
                 <ion-card-content>
@@ -108,12 +107,12 @@
                         </ion-col>
                     </ion-row>                    
                 </ion-card-content>
-                <ion-row style="background-color: black; color: white;">
+                <ion-row style="background-color: black;">
                     <ion-col col-7>
-                        <p><strong>TOTAL</strong></p>
+                        <p style="color: white;"><strong>TOTAL</strong></p>
                     </ion-col>
                     <ion-col col-5>
-                        <p><strong>{{ totalPedido | number: '1.2-2' }}</strong></p>
+                        <p style="color: white;"><strong>{{ totalPedido | number: '1.2-2' }}</strong></p>
                     </ion-col>
                 </ion-row>
             </ion-card>

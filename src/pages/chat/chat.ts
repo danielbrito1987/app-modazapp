@@ -49,7 +49,32 @@ export class ChatPage {
                     //that.tratarRetorno(response.output);
                 }
             });
-        });        
+        });    
+    }    
+
+    ionViewDidEnter() {
+        this.mensagens = new Array<Mensagem>();
+        var that = this;
+
+        var watson = require('watson-developer-cloud');
+
+        var conversation = new watson.ConversationV1({ 
+            username: 'username',
+            password: 'password',
+            version_date: '2018-02-16'
+        });
+
+        conversation.message({
+            workspace_id: 'workspace_id',
+            input: { 'text': '' }
+        }, function (err, response){
+            if(err){
+                console.log("Erro:" + err);
+            }else{                
+                that.mensagens.push(new Mensagem(response.output.text[0], true));
+                //that.tratarRetorno(response.output);
+            }
+        });
     }
 
     enviarMensagem() {
@@ -83,6 +108,18 @@ export class ChatPage {
                         //that.tratarRetorno(response.output);
                     }            
                 });
+            });
+
+            conversation.message({
+                workspace_id: 'workspace_id',
+                input: { 'text': this.mensagem }
+            }, function (err, response){
+                if(err){
+                    console.log("Erro:" + err);
+                }else{
+                    that.mensagens.push(new Mensagem(response.output.text[0], true));
+                    //that.tratarRetorno(response.output);
+                }            
             });
 
             this.mensagem = "";

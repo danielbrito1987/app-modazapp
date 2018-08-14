@@ -33,7 +33,7 @@ export class NovoEnderecoPage {
         this.Estado = "";
         this.idEndereco = this.navParams.get('IdEndereco');
 
-        if(this.idEndereco != ""){
+        if(this.idEndereco != "" && this.idEndereco != undefined){
             this.getItems();
         }
     }
@@ -83,6 +83,12 @@ export class NovoEnderecoPage {
 
     goCamera(){
         this.navCtrl.push(FeedbackPage);
+    }
+
+    runTimeChange(){
+        if(this.TextoCep.length == 10){
+            this.buscaCep();
+        }
     }
 
     buscaCep(){

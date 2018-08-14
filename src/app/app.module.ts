@@ -26,6 +26,7 @@ import { NovoEnderecoPage } from '../pages/novoEndereco/novoEndereco';
 import { PagamentoPage } from '../pages/pagamento/pagamento';
 import { NovoPagamentoPage } from '../pages/novoPagamento/novoPagamento';
 import { ModalNavegacao } from '../modals/navegacao/navegacao';
+import { ModalEndereco } from '../modals/endereco/endereco';
 
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -78,6 +79,7 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
     PagamentoPage,
     NovoPagamentoPage,
     ModalNavegacao,
+    ModalEndereco,
     TabsPage
   ],
   imports: [
@@ -114,6 +116,7 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
     PagamentoPage,
     NovoPagamentoPage,
     ModalNavegacao,
+    ModalEndereco,
     TabsPage
   ],
   providers: [

@@ -1,26 +1,15 @@
 <ion-header>
-    <ion-navbar color="primary">
-        <button ion-button menuToggle color="secondary">
-            <ion-icon ios="ios-menu" md="md-menu"></ion-icon>
-        </button>
-        <button *ngIf="this.conexao === false" ion-button icon-only>
-            <ion-icon ios="ios-wifi" md="md-wifi" color="danger"></ion-icon>
-        </button>
-        <div style="text-align:center">
-            <img src="assets/imgs/LOGO01.png" style="display: inline-block; width: 60%;" />
-        </div>
-        <ion-title></ion-title>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
-            <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
+    <ion-toolbar>
+        <ion-title>Novo Endereço</ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()">
+                <span ion-text color="secondary" showWhen="ios">Cancelar</span>
+                <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
             </button>
-            <!-- <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
-            </button> -->
         </ion-buttons>
-    </ion-navbar>
+    </ion-toolbar>
 </ion-header>
-    
+          
 <ion-content>
     <ion-list>
         <ion-item>

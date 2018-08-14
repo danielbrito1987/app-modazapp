@@ -34,7 +34,7 @@ export class DetalhesProdutoPage{
     estoque = [];
     qtdPedido = [];
     carrinho = [];
-    totalQtd: number;
+    totalQtd: number = 0;
     valorProduto: number;
     navegacao: string;
     divAnterior: string;
@@ -97,9 +97,10 @@ export class DetalhesProdutoPage{
         //if(localStorage.getItem('Produtos' + this.idProduto) == "" || localStorage.getItem('Produtos' + this.idProduto) == null){
         this.http.get('https://api.modazapp.online/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
         //this.http.get('http://localhost:65417/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
+            console.log(data);
             this.items = data;
-            localStorage.setItem('DescricaoProduto', data['Descricao']);
-            this.valorProduto = parseFloat(data['Valor']);
+            localStorage.setItem('DescricaoProduto', data[0]['Descricao']);
+            this.valorProduto = parseFloat(data[0]['Valor']);
             this.estoque = data[0].Estoque.split(',');
 
             this.estoque.forEach(element => {            
@@ -182,17 +183,25 @@ export class DetalhesProdutoPage{
         var qtd = [];
 
         this.qtdPedido.forEach(element => {
-            this.totalQtd += element.qtd;
+            this.totalQtd += element.qtd != "" ? parseFloat(element.qtd) : 0;
             qtd.push(element.tamanho + ':' + parseFloat(element.qtd != "" ? element.qtd : 0));
         });
 
-        this.valorProduto = this.valorProduto * this.totalQtd;
+        //this.valorProduto = parseFloat(this.valorProduto.toString().replace('.', ',')) * this.totalQtd;
         
         var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja, 'QtdPedido': JSON.stringify(qtd) };
-                
-        this.carrinho.push([{ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price-cents': this.valorProduto }]);
+        var vlrProd = this.valorProduto.toString().replace('.', '');
+        
+        if(localStorage.getItem('ItemIUGU') == "" || localStorage.getItem('ItemIUGU') == null){
+            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd + '0') });
+            localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
+        }else{
+            this.carrinho = JSON.parse(localStorage.getItem('ItemIUGU'));
+            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd + '0') });
+            localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
+        }
 
-        localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
+        console.log(this.carrinho);
         // if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
         //     this.loading.dismiss();
         //     this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');

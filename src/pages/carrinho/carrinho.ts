@@ -21,6 +21,7 @@ export class CarrinhoPage{
     usuarioLogado: boolean;
     qtdItems: any;
     qtdPedido: any[];
+    carrinhoIugu: any[];
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public alertCtrl: AlertController,
         private http: HttpClient, public toastCtrl: ToastController){
@@ -35,9 +36,11 @@ export class CarrinhoPage{
             this.http.get('https://api.modazapp.online/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
             //this.http.get('http://localhost:65417/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{                
                 this.qtdPedido = [];
+                this.qtdItems = [];
+                this.carrinhoIugu = [];
+
                 this.items = data;
                 this.qtdItems = data;
-                console.log(data);
                 
                 if(this.qtdItems.length > 0){ 
                     for(let i = 0; i < this.qtdItems.length; i++){
@@ -45,6 +48,14 @@ export class CarrinhoPage{
                     }                    
                     //console.log(data[0]['qtdPedido'].split(','));
                     localStorage.setItem('Carrinho', JSON.stringify(data));
+
+                    this.qtdItems.forEach(element => {
+                        var valor = element.valorTotal.toString().replace('.', '') + '0';
+                        var qtd = element.valorTotal / element.valorProduto;
+                        this.carrinhoIugu.push({ 'description': element.descProduto, 'quantity': qtd, 'price_cents': valor });
+                    });
+
+                    localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinhoIugu));
                     localStorage.setItem('CodPedido', data[0]['codPedido']);
                     this.loading.dismiss();
                 }else{
@@ -110,7 +121,7 @@ export class CarrinhoPage{
     }
 
     goCheckou(){
-        this.navCtrl.push(CheckoutPage);
+        this.navCtrl.push(CheckoutPage, { 'TotalPedido': this.valorTotal() });
     }
 
     goRootPage(): void{

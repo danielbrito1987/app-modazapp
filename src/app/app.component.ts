@@ -57,7 +57,7 @@ export class MyApp {
       }, 1000);
       
       this.openHomePage(splashScreen);
-      //this.openModalNavegacao();
+      this.openModalNavegacao('inicio');
     });
   }
 
@@ -85,8 +85,8 @@ export class MyApp {
     this.menuCtrl.close();
   }
 
-  openModalNavegacao(){
-    let modal = this.modalCtrl.create(ModalNavegacao);
+  openModalNavegacao(origem: any){
+    let modal = this.modalCtrl.create(ModalNavegacao, { Origem: origem });
     setTimeout(() => {
       modal.present();
     });

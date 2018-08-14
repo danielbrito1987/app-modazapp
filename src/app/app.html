@@ -1,6 +1,6 @@
 <ion-menu [content]="content">
     <ion-header>
-        <div style="border: 0px !important; margin: 0px !important; height: 150px !important; background-size: cover !important; background-image: url('./assets/imgs/background-toolbar.jpg') !important;"></div>
+        <div style="border: 0px !important; margin: 0px !important; height: 150px !important; background-size: cover !important; background-image: url('./assets/imgs/background-toolbar.png') !important;"></div>
         <ion-title>
             <div style="width: 200px; margin: 0px; border: 0px; float: left; text-align: left; position: absolute; left: 10px; top: -30px;">{{ nomeUsuario }}</div>
         </ion-title>
@@ -20,7 +20,7 @@
                 <ion-icon color="secondary" item-start ios="ios-pin" md="md-pin"></ion-icon>
                 Meus Endereços
             </button>
-            <button ion-item (click)="openModalNavegacao()">
+            <button ion-item (click)="openModalNavegacao('menu')">
                 <ion-icon color="secondary" item-start ios="ios-settings" md="md-settings"></ion-icon>
                 Navegação
             </button>

@@ -2,7 +2,7 @@
     <ion-toolbar>
         <ion-title>Forma de Navegação</ion-title>
         <ion-buttons start>
-            <button ion-button (click)="dismiss()">
+            <button ion-button (click)="dismiss()" *ngIf="validaChamada()">
                 <span ion-text color="secondary" showWhen="ios">Cancelar</span>
                 <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
             </button>

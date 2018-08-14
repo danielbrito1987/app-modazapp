@@ -64,6 +64,31 @@ export class LoginPage{
         });
     }
 
+    cadastroIugu(){
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json',
+              'Access-Control-Allow-Origin': 'http://localhost:8100',
+              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+            })
+        };
+        
+        var cliente = {
+            email: localStorage.getItem('EmailUsuario'),
+            name: localStorage.getItem('NomeUsuario'),
+            cpf_cnpj: localStorage.getItem('CpfUsuario')
+        };
+
+        this.http.post('/iugu/customers', cliente, httpOptions).subscribe(data => {
+            console.log(data);
+            localStorage.setItem('IdIugu', data['id']);
+        }, (error) => {
+            console.log(error);
+        });
+    }
+
     buscarClienteIugu(){
         const httpOptions = {
             headers: new HttpHeaders({
@@ -76,8 +101,11 @@ export class LoginPage{
         };
 
         this.http.get('/iugu/customers?query=' + localStorage.getItem('EmailUsuario'), httpOptions).subscribe(data => {
-            console.log(data);
-            localStorage.setItem('IdIugu', data['items'][0]['id']);
+            if(data["totalItems"] > 0){
+                localStorage.setItem('IdIugu', data['items'][0]['id']);
+            }else{
+                this.cadastroIugu();
+            }
         }, (error) => {
             console.log(error);
         })
