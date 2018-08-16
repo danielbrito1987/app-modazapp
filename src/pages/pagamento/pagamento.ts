@@ -8,6 +8,16 @@ import { HomePage } from '../home/home';
 import { FeedbackPage } from '../feedback/feedback';
 import { NovoPagamentoPage } from '../novoPagamento/novoPagamento';
 
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:8100',
+      'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+      'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+    })
+};
+
 @Component({
     selector: 'page-pagamento',
     templateUrl: 'pagamento.html'
@@ -16,6 +26,8 @@ export class PagamentoPage{
     public carrinhoPage = CarrinhoPage;
     loading: any;
     items: any;    
+    apiIugu = "https://api.iugu.com/v1";
+    //apiIugu = "/iugu";
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -24,18 +36,8 @@ export class PagamentoPage{
 
     initializeItems(){
         this.showLoader();
-
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-
-        this.http.get('/iugu/customers/' + localStorage.getItem("IdIugu") + '/payment_methods', httpOptions).subscribe(data => {
+        
+        this.http.get(this.apiIugu + '/customers/' + localStorage.getItem("IdIugu") + '/payment_methods', httpOptions).subscribe(data => {
             this.items = data;
             this.loading.dismiss();
         }, (error) => {

@@ -29,6 +29,8 @@ export class ProdutosPage{
     tipoUsuario: any;
     page = 1;
     errorMessage: string;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public provider: ProdutoProvider){
@@ -45,8 +47,7 @@ export class ProdutosPage{
         if(this.showLoad)
             this.showLoader();
                         
-            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
+            this.http.get(this.api + '/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
                 this.items = data;
                 this.page = this.page + 1;
 
@@ -62,8 +63,7 @@ export class ProdutosPage{
 
     doInfinite(infiniteScroll){
         setTimeout(() => {
-            this.http.get('https://api.modazapp.online/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
+            this.http.get(this.api + '/produto/GetProdutosPelaLojaPaginacao?id=' + this.idLoja + "&paginaAtual=" + this.page).subscribe(data =>{
                 this.items = data;
                 this.page = this.page + 1;
 
@@ -149,8 +149,7 @@ export class ProdutosPage{
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             localStorage.setItem("Produto", idProduto);
 
-            this.http.post("https://api.modazapp.online/api/carrinho/", dados).subscribe(data => {
-            //this.http.post("http://localhost:65417/api/carrinho/", dados).subscribe(data => {
+            this.http.post(this.api + "/carrinho/", dados).subscribe(data => {
                 if(data == "Erro"){
                     this.loading.dismiss();
                     this.goLoginPage();

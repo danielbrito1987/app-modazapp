@@ -7,6 +7,17 @@ import { HomePage } from '../home/home';
 import { CarrinhoPage } from '../carrinho/carrinho';
 import { FeedbackPage } from '../feedback/feedback';
 declare var require: any;
+
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:8100',
+      'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+      'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+    })
+};
+
 @Component({
     selector: 'page-cadastro',
     templateUrl: 'cadastro.html'
@@ -22,6 +33,10 @@ export class CadastroPage {
     uf: any;
     public CPF = require("cpf_cnpj").CPF;
     public CNPJ = require("cpf_cnpj").CNPJ;
+    apiIugu = "https://api.iugu.com/v1";
+    //apiIugu = "/iugu";
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
     
     constructor(public navCtrl: NavController, private http: HttpClient, public alertCtrl: AlertController, 
         public fbld: FormBuilder, public toastCtrl: ToastController, private loadingCtrl: LoadingController) {
@@ -35,10 +50,11 @@ export class CadastroPage {
     inserirUsuario(): void{
         if(this.validaPoliticas){
             this.showLoader();
-            this.http.post("https://api.modazapp.online/api/Usuarios/PostUsuario", this.form.value).subscribe(data =>{
-            //this.http.post("http://localhost:65417/api/usuarios", this.form.value).subscribe(data =>{
-                if(data["idUsuario"] != null){                    
+            this.http.post(this.api + "/Usuarios/PostUsuario", this.form.value).subscribe(data =>{
+                console.log(data);
+                if(data["idUsuario"] != null){
                     this.showAlert('Sucesso', 'Cadastro realizado com sucesso.');
+                    this.form = new FormGroup({ Tipo: new FormControl(), Nome: new FormControl(), DataNasc: new FormControl(), Email: new FormControl(), Telefone: new FormControl(), Sexo: new FormControl(), CPF: new FormControl(), Senha: new FormControl(), RazaoSocial: new FormControl(), CNPJ: new FormControl(), chkPol: new FormControl(), Pergunta1: new FormControl(), Pergunta2: new FormControl(), Pergunta3: new FormControl() });
                     this.loading.dismiss();
                 } else {
                     this.showAlert('Alerta', data.toString());
@@ -57,24 +73,14 @@ export class CadastroPage {
         }
     }
 
-    cadastroIugu(){
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-        
+    cadastroIugu(){                
         var cliente = {
             email: this.form.value['Email'],
             name: this.form.value['Nome'],
             cpf_cnpj: this.form.value['CPF']
         };
 
-        this.http.post('/iugu/customers', cliente, httpOptions).subscribe(data => {
+        this.http.post(this.apiIugu + '/customers', cliente, httpOptions).subscribe(data => {
             console.log(data);
         }, (error) => {
             console.log(error);

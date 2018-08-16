@@ -18,6 +18,8 @@ export class EspecificacaoProdutoPage{
     idLoja: any;
     showLoad: boolean;
     usuarioLogado: boolean;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
         this.showLoad = true;
@@ -30,9 +32,7 @@ export class EspecificacaoProdutoPage{
         if(this.showLoad)
             this.showLoader();
         
-        //if(localStorage.getItem('Produtos' + this.idProduto) == "" || localStorage.getItem('Produtos' + this.idProduto) == null){
-        this.http.get('https://api.modazapp.online/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
+        this.http.get(this.api + '/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
             this.items = data;
             this.loading.dismiss();
             }, (error) =>{

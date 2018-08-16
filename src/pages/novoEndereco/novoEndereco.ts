@@ -21,6 +21,8 @@ export class NovoEnderecoPage {
     Bairro: string;
     Cidade: any;
     Estado: any;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
     
     constructor(public navCtrl: NavController, public navParams: NavParams, private http: HttpClient, public alertCtrl: AlertController, 
         public toastCtrl: ToastController, private loadingCtrl: LoadingController) {
@@ -41,7 +43,7 @@ export class NovoEnderecoPage {
     getItems(){
         this.showLoader();
 
-        this.http.get('https://api.modazapp.online/api/Usuarios/GetEnderecoPeloId?id=' + this.idEndereco).subscribe(data => {
+        this.http.get(this.api + '/Usuarios/GetEnderecoPeloId?id=' + this.idEndereco).subscribe(data => {
             this.Titulo = data[0]['Titulo'];
             this.TextoCep = data[0]['Cep'];
             this.Endereco = data[0]['Endereco'];
@@ -59,7 +61,7 @@ export class NovoEnderecoPage {
 
         var dados = { IdUsuario: localStorage.getItem('IdUsuario'), Titulo: this.Titulo, Endereco: this.Endereco, Bairro: this.Bairro, Cidade: this.Cidade, Estado: this.Estado, Cep: this.TextoCep }
 
-        this.http.post('https://api.modazapp.online/api/Usuarios/PostEndereco', dados).subscribe(data => {
+        this.http.post(this.api + '/Usuarios/PostEndereco', dados).subscribe(data => {
             this.loading.dismiss();
             this.showAlert('Sucesso', 'Endereço cadastrado com sucesso.');
             this.navCtrl.pop();

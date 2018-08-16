@@ -19,6 +19,8 @@ export class PerfilPage{
     dataNasc: string;
     senha: string;
     confirmaSenha: string;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -37,8 +39,7 @@ export class PerfilPage{
                 this.dataNasc = this.items[0].DataNasc;
                 this.telefoneusuario = this.items[0].Telefone;
             }else{
-                this.http.get('https://api.modazapp.online/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
-                //this.http.get('http://localhost:65417/api/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
+                this.http.get(this.api + '/Usuarios/GetPerfilUsuario?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
                     console.log(data);
                     this.items = data;
                     this.nomeUsuario = data[0].Nome;
@@ -63,8 +64,7 @@ export class PerfilPage{
             if(this.validaLogin()){
                 var dados = { 'IdUsuario': parseInt(localStorage.getItem("IdUsuario")), 'Nome': this.nomeUsuario, 'Email': this.emailusuario, 'CPF': this.cpfUsuario, 'DataNasc': this.dataNasc, 'Senha': this.senha };
 
-                // this.http.post("http://localhost:65417/api/Usuarios/AlterarPerfil", dados).subscribe(data => {
-                this.http.post("https://api.modazapp.online/api/Usuarios/AlterarPerfil", dados).subscribe(data => {
+                this.http.post(this.api + "/Usuarios/AlterarPerfil", dados).subscribe(data => {
                     this.loading.dismiss();
                     if(data["success"] == true){
                         this.showAlert("Sucesso", data["message"]);

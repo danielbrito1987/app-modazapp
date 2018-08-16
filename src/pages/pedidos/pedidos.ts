@@ -21,6 +21,8 @@ export class PedidosPage{
     teste: any;
     usuarioLogado: boolean;
     showLoad: boolean;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public alertCtrl: AlertController,
         private http: HttpClient, public toastCtrl: ToastController){
@@ -35,8 +37,7 @@ export class PedidosPage{
 
     getItems(){
         this.showLoader();
-        this.http.get('https://api.modazapp.online/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{
+        this.http.get(this.api + '/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{
           this.items = data;
           this.loading.dismiss();
         }, (error) =>{

@@ -19,6 +19,8 @@ export class DetalhesPedidoPage{
     teste: any;
     usuarioLogado: boolean;
     qtdPedido: any[];
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public navParams: NavParams,
         private http: HttpClient, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -35,8 +37,7 @@ export class DetalhesPedidoPage{
         var dados = { 'CodPedido': this.codPedido };
 
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
-            this.http.get('http://api.modazapp.online/api/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{                
+            this.http.get(this.api + '/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{
                 this.items = data;
                 console.log(this.items);
                 this.qtdPedido = data[0].QtdPedido.split(',');
@@ -53,8 +54,7 @@ export class DetalhesPedidoPage{
     }
 
     getPedidosPorLoja(){
-        this.http.get('https://api.modazapp.online/api/Pedidos/GetPedidosLoja?id=' + this.codPedido).subscribe(data => {
-        //this.http.get('http://localhost:65417/api/Pedidos/GetPedidosLoja?id=' + this.codPedido).subscribe(data => {
+        this.http.get(this.api + '/Pedidos/GetPedidosLoja?id=' + this.codPedido).subscribe(data => {
             this.lojas = data;
         }, (error) =>{
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');

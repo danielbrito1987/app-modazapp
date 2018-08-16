@@ -46,18 +46,20 @@ export class MyApp {
             
       this.oneSignal.endInit();
 
-      // setTimeout(() => {
-      //   this.appVersion.getVersionNumber().then(value => {
-      //     this.versao = value;
-      //   });
-      // });
+      setTimeout(() => {
+        this.appVersion.getVersionNumber().then(value => {
+          this.versao = value;
+        });
+      });
 
       setInterval(() => {
         this.usuarioLogado = this.validaLogin();
       }, 1000);
       
       this.openHomePage(splashScreen);
-      this.openModalNavegacao('inicio');
+
+      if(localStorage.getItem('Navegacao') == null || localStorage.getItem('Navegacao') == "" || localStorage.getItem('Navegacao') == undefined)
+        this.openModalNavegacao('inicio');
     });
   }
 

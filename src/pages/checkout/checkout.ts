@@ -46,6 +46,10 @@ export class CheckoutPage{
     frete: number = 0;
     totalPedido: number = 0;
     tokenPagamento: any;
+    apiIugu = "https://api.iugu.com/v1";
+    //apiIugu = "/iugu";
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public localNotification: LocalNotifications,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, public modalCtrl: ModalController){
@@ -66,7 +70,7 @@ export class CheckoutPage{
     }
 
     getMetodoPgto(){
-        this.http.get('/iugu/customers/' + localStorage.getItem("IdIugu") + '/payment_methods', httpOptions).subscribe(data => {
+        this.http.get(this.apiIugu + '/customers/' + localStorage.getItem("IdIugu") + '/payment_methods', httpOptions).subscribe(data => {
             this.items = data;
         }, (error) => {
             console.error(error);
@@ -74,8 +78,7 @@ export class CheckoutPage{
     }
 
     getEndereco(){
-        this.http.get('https://api.modazapp.online/api/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
-        //this.http.get('http://localhost:65417/api/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
+        this.http.get(this.api + '/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
             this.enderecos = data;
             this.meusEnderecos = this.enderecos;
 
@@ -92,8 +95,7 @@ export class CheckoutPage{
     }
 
     getEnderecoPeloId(idEndereco){
-        this.http.get('https://api.modazapp.online/api/Usuarios/GetEnderecoPeloId?id=' + idEndereco).subscribe(data => {
-        //this.http.get('http://localhost:65417/api/Usuarios/GetEnderecoPeloId?id=' + idEndereco).subscribe(data => {
+        this.http.get(this.api + '/Usuarios/GetEnderecoPeloId?id=' + idEndereco).subscribe(data => {
             this.titulo = data[0]["Titulo"];
             this.endereco = data[0]["Endereco"];
             this.estado = data[0]["Estado"];
@@ -154,8 +156,7 @@ export class CheckoutPage{
 
             var pedido = { 'TokenUsuario': localStorage.getItem('tokenLogin'), 'CodPedido': localStorage.getItem('CodPedido'), 'Contato': this.contato, 'Endereco': this.endereco, 'Numero': this.numero, 'Bairro': this.bairro, 'Cidade': this.cidade, 'FormaPgto': this.formaPgto };
             
-            this.http.post("https://api.modazapp.online/api/pedidos/", pedido).subscribe(data => {
-            //this.http.post("http://localhost:65417/api/pedidos/", dados).subscribe(data => {                
+            this.http.post(this.api + "/pedidos/", pedido).subscribe(data => {
                 if(data == "Erro"){
                     this.loading.dismiss();
                     this.goLoginPage();
@@ -173,7 +174,7 @@ export class CheckoutPage{
                 this.goRootPage();
             });
             
-            this.http.post("/iugu/invoices/", dados, httpOptions).subscribe(data => {
+            this.http.post(this.apiIugu + "/invoices/", dados, httpOptions).subscribe(data => {
                 console.log(data);
                 if(this.tokenPagamento == "bank_slip"){
                     this.cobrancaBoletoIugu(data["id"])
@@ -204,7 +205,7 @@ export class CheckoutPage{
             "order_id": localStorage.getItem("CodPedido")
         };
 
-        this.http.post("/iugu/charge", dados, httpOptions).subscribe(data => {
+        this.http.post(this.apiIugu + "/charge", dados, httpOptions).subscribe(data => {
             this.showAlert("Linha Digitável", data["identification"]);
             this.loading.dismiss();
         }, (error) => {
@@ -224,7 +225,7 @@ export class CheckoutPage{
             "order_id": localStorage.getItem("CodPedido")
         };
 
-        this.http.post("/iugu/charge", dados, httpOptions).subscribe(data => {
+        this.http.post(this.apiIugu + "/charge", dados, httpOptions).subscribe(data => {
             console.log(data);
         }, (error) => {
             console.log(error);

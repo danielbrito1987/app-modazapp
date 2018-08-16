@@ -15,7 +15,9 @@ import { NovoEnderecoPage } from '../novoEndereco/novoEndereco';
 export class EnderecosPage{
     public carrinhoPage = CarrinhoPage;
     loading: any;
-    items: any;    
+    items: any;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
@@ -25,8 +27,7 @@ export class EnderecosPage{
     initializeItems(){
         this.showLoader();
 
-        this.http.get('https://api.modazapp.online/api/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
-        //this.http.get('http://localhost:65417/api/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
+        this.http.get(this.api + '/Usuarios/GetEnderecos?id=' + localStorage.getItem("IdUsuario")).subscribe(data => {
             this.items = data;
             this.loading.dismiss();
         }, (error) => {

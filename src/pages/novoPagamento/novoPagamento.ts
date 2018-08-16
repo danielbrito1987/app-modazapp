@@ -6,6 +6,16 @@ import { HomePage } from '../home/home';
 import { CarrinhoPage } from '../carrinho/carrinho';
 import { FeedbackPage } from '../feedback/feedback';
 
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:8100',
+      'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+      'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+    })
+};
+
 @Component({
     selector: 'page-novoPagamento',
     templateUrl: 'novoPagamento.html'
@@ -20,6 +30,8 @@ export class NovoPagamentoPage {
     AnoVencimento: any;
     CodSeg: any;
     id: any;
+    apiIugu = "https://api.iugu.com/v1";
+    //apiIugu = "/iugu";
     
     constructor(public navCtrl: NavController, public navParams: NavParams, private http: HttpClient, public alertCtrl: AlertController, 
         public toastCtrl: ToastController, private loadingCtrl: LoadingController) {
@@ -32,7 +44,8 @@ export class NovoPagamentoPage {
         this.AnoVencimento = "";
         this.CodSeg = "";
 
-        if(this.id != ""){
+        console.log(this.id);
+        if(this.id != "" && this.id != undefined){
             this.getItems();
         }
     }
@@ -40,17 +53,7 @@ export class NovoPagamentoPage {
     getItems(){
         this.showLoader();
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-
-        this.http.get('/iugu/customers/' + localStorage.getItem('IdIugu') + '/payment_methods/' + this.id, httpOptions).subscribe(data => {
+        this.http.get(this.apiIugu + '/customers/' + localStorage.getItem('IdIugu') + '/payment_methods/' + this.id, httpOptions).subscribe(data => {
             this.Descricao = data['description'];
             this.NumeroCartao = data['data']['display_number'];
             this.Nome = data['data']['holder_name'];
@@ -65,16 +68,6 @@ export class NovoPagamentoPage {
 
     inserirPagamento(){
         this.showLoader();
-
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
 
         var dados = {
             account_id: '92FE03E4DB1840C6877548DFE41C6AB6',
@@ -91,8 +84,9 @@ export class NovoPagamentoPage {
         };
 
         if(this.id != ""){
-            this.http.put('/iugu/customers/' + localStorage.getItem('IdIugu') + '/payment_methods/' + this.id, httpOptions).subscribe(data => {
+            this.http.put(this.apiIugu + '/customers/' + localStorage.getItem('IdIugu') + '/payment_methods/' + this.id, httpOptions).subscribe(data => {
                 this.showAlert('Sucesso', 'Forma de Pagamento alterada com sucesso.');
+                this.loading.dismiss();
             }, (error) => {
                 console.log(error);
             });
@@ -110,24 +104,15 @@ export class NovoPagamentoPage {
     criarMetodoPagamento(idToken){
         this.showLoader();
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-
         var dados = {
             token: idToken,
             description: this.Descricao
         };
 
-        this.http.post('/iugu/customers/' + localStorage.getItem('IdIugu') + '/payment_methods', dados, httpOptions).subscribe(data => {
+        this.http.post(this.apiIugu + '/customers/' + localStorage.getItem('IdIugu') + '/payment_methods', dados, httpOptions).subscribe(data => {
             if(data != null){
                 this.showAlert('Sucesso', 'Forma de Pagamento cadastrada com sucesso.')
+                this.loading.dismiss();
             }
         }, (error) => {
             console.log(error);

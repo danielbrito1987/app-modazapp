@@ -22,6 +22,8 @@ export class CarrinhoPage{
     qtdItems: any;
     qtdPedido: any[];
     carrinhoIugu: any[];
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public alertCtrl: AlertController,
         private http: HttpClient, public toastCtrl: ToastController){
@@ -33,8 +35,7 @@ export class CarrinhoPage{
         this.showLoader();
 
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
-            this.http.get('https://api.modazapp.online/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{                
+            this.http.get(this.api + '/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
                 this.qtdPedido = [];
                 this.qtdItems = [];
                 this.carrinhoIugu = [];
@@ -97,8 +98,7 @@ export class CarrinhoPage{
 
     getItems(){
         this.showLoader();
-        this.http.get('http://api.modazapp.online/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
+        this.http.get(this.api + '/Carrinho/GetCarrinhoPeloId?id=' + localStorage.getItem("tokenLogin")).subscribe(data =>{
           this.items = data;      
           this.loading.dismiss();
         }, (error) =>{
@@ -131,7 +131,7 @@ export class CarrinhoPage{
 
     removeItem(item: any){
         console.log(item);
-        this.http.get('http://api.modazapp.online/api/Carrinho/AtualizaCarrinho?id=' + item).subscribe(
+        this.http.get(this.api + '/Carrinho/AtualizaCarrinho?id=' + item).subscribe(
             resp => this.getItems(),
             (err) => { this.showToast('top', 'Erro ao excluir o item do carrinho.' + '<br />' + err.message); console.log(err) }
         );

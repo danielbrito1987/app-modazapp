@@ -28,6 +28,8 @@ export class FeedbackPage{
     imageFileName:any;
     usuarioLogado: boolean;
     temPermissao: boolean = false;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController, public camera: Camera,
         public navParams: NavParams, public toastCtrl: ToastController, private alertCtrl: AlertController, public emailComposer: EmailComposer){
@@ -45,8 +47,7 @@ export class FeedbackPage{
     }
 
     getLojas(){
-        this.http.get('https://api.modazapp.online/api/Pedidos/GetLojasDoPedido?id=' + this.pedido).subscribe(data =>{
-            //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
+        this.http.get(this.api + '/Pedidos/GetLojasDoPedido?id=' + this.pedido).subscribe(data =>{
             this.lojas = data;
         }, (error) =>{
             this.showAlert('Erro', 'Falha na comunicação com o servidor');
@@ -79,8 +80,7 @@ export class FeedbackPage{
                 
         var dados = { 'IdUsuario': this.idUsuario, 'Nome': this.nome, 'Email': this.email, 'CodPedido': this.pedido, 'IdLoja': this.loja, 'Imagem': this.imageURI };
                 
-        this.http.post('https://api.modazapp.online/api/Pedidos/SalvarComprovante', dados).subscribe(data =>{
-        //this.http.post('http://localhost:65417/api/Pedidos/SalvarComprovante', dados).subscribe(data =>{
+        this.http.post(this.api + '/Pedidos/SalvarComprovante', dados).subscribe(data =>{
             if(data.toString() == 'OK'){
                 this.loading.dismiss();
                 this.showAlert('Sucesso', 'Comprovante enviado com sucesso.');

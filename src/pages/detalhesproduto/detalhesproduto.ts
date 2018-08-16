@@ -38,6 +38,8 @@ export class DetalhesProdutoPage{
     valorProduto: number;
     navegacao: string;
     divAnterior: string;
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
 
     constructor(private oneSignal: OneSignal, public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, private localNotification: LocalNotifications){
@@ -94,10 +96,7 @@ export class DetalhesProdutoPage{
         if(this.showLoad)
             this.showLoader();
         
-        //if(localStorage.getItem('Produtos' + this.idProduto) == "" || localStorage.getItem('Produtos' + this.idProduto) == null){
-        this.http.get('https://api.modazapp.online/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
-            console.log(data);
+        this.http.get(this.api + '/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
             this.items = data;
             localStorage.setItem('DescricaoProduto', data[0]['Descricao']);
             this.valorProduto = parseFloat(data[0]['Valor']);
@@ -113,10 +112,6 @@ export class DetalhesProdutoPage{
                 this.loading.dismiss();
                 this.goRootPage();
         });
-        // }else{
-        //     this.items = JSON.parse(localStorage.getItem('Produtos' + this.idProduto));
-        //     this.loading.dismiss();
-        // }
     }
 
     getItems(ev:any){
@@ -201,22 +196,14 @@ export class DetalhesProdutoPage{
             localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
         }
 
-        console.log(this.carrinho);
-        // if(this.qtdP <= 0 && this.qtdM <= 0 && this.qtdG <= 0 && this.qtdGG <= 0 && this.qtdXG <= 0 && this.qtdXGG <= 0){
-        //     this.loading.dismiss();
-        //     this.showAlert('Atenção', 'Não é permitido comprar com quantidade 0 (zero).');
-        // }
-        // else
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             localStorage.setItem("Produto", idProduto);
 
-            this.http.post("https://api.modazapp.online/api/Carrinho/PostCarrinho?id=", dados).subscribe(data => {
-            //this.http.post("http://localhost:65417/api/Carrinho/PostCarrinho?id=", dados).subscribe(data => {
+            this.http.post(this.api + "/Carrinho/PostCarrinho?id=", dados).subscribe(data => {
                 if(data == "Erro"){
                     this.loading.dismiss();
                     this.goLoginPage();
                 }else{
-                    console.log(data);
                     this.idCarrinho = data["idCarrinho"];
 
                     if(localStorage.getItem('ExpirarCarrinho') == null || localStorage.getItem('ExpirarCarrinho') == "")
@@ -241,7 +228,6 @@ export class DetalhesProdutoPage{
     }
 
     agendarNotificacao(){
-        //let dateobject = moment(this.dataRegistro).toDate();
         if(localStorage.getItem("ExpirarCarrinho") != null && localStorage.getItem("ExpirarCarrinho") != ""){
             this.isAndroid = true;
             this.dataRegistro = new Date(new Date().getHours() + 1);

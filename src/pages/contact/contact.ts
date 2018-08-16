@@ -22,6 +22,8 @@ export class ContactPage {
   public comprovante = "";
   showLoad: boolean;
   usuarioLogado: boolean;
+  api = "https://api.modazapp.online/api";
+  //api = "http://localhost:65417/api";
   
   constructor(public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public camera: Camera, public alertCtrl: AlertController, public statusBar: StatusBar) {
@@ -34,9 +36,11 @@ export class ContactPage {
     if(this.showLoad)
       this.showLoader();
 
-    if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
-        this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
+    this.items = JSON.parse(localStorage.getItem('Lojas'));
+    console.log(this.items);
+
+    if(this.items == null || this.items == "" || this.items.length == 0){
+      this.http.get(this.api + '/lojas').subscribe(data =>{
         this.items = data;     
         localStorage.setItem('Lojas', JSON.stringify(data));
         this.loading.dismiss();
@@ -62,7 +66,7 @@ export class ContactPage {
   getItems(ev:any){
     let val = ev.target.value;
       
-    this.http.get('http://api.modazapp.online/api/produto/PesquisaProduto?id=' + val).subscribe(data =>{
+    this.http.get(this.api + '/produto/PesquisaProduto?id=' + val).subscribe(data =>{
       this.items = data;
     }, (error) =>{
       this.showAlert('Erro', 'Falha na comunicação com o servidor.');

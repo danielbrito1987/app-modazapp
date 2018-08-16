@@ -9,14 +9,24 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-      
+
 <ion-content>
-    <ion-list>
-        <button ion-item (click)="alterarNavegacao('Atacado')">
+    <p text-center><strong>Bem vindo(a) ao ModaZapp!</strong></p> 
+    <p text-center><strong>Como podemos atendê-lo(a):</strong></p>
+    <ion-list no-lines>
+        <ion-item (click)="alterarNavegacao('Atacado')" text-center>
+            <img src="./assets/imgs/atacado.png" style="width: 90%; text-align:center;" />
+        </ion-item>
+        <ion-item (click)="alterarNavegacao('Varejo')" text-center>
+            <img src="./assets/imgs/varejo.png" style="width: 90%; text-align:center;" />
+        </ion-item>
+        <!-- <button ion-button icon-start (click)="alterarNavegacao('Atacado')">
+            <ion-icon ios="ios-cart" md="md-cart"ionic ></ion-icon>
             Atacado
-        </button>
-        <button ion-item (click)="alterarNavegacao('Varejo')">
+        </button> -->
+        <!-- <button ion-button icon-start (click)="alterarNavegacao('Varejo')">
+            <ion-icon ios="ios-basket" md="md-basket"></ion-icon>
             Varejo
-        </button>
+        </button> -->
     </ion-list>
 </ion-content>

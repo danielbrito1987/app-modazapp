@@ -6,6 +6,16 @@ import { HomePage } from '../home/home';
 import { CadastroPage } from '../cadastro/cadastro';
 import { TabsPage } from '../tabs/tabs';
 
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:8100',
+      'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
+      'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
+    })
+};
+
 @Component({
     selector: 'page-login',
     templateUrl: 'login.html'
@@ -16,6 +26,10 @@ export class LoginPage{
     loading: any;
     pedidos: any;
     email: string;
+    apiIugu = "https://api.iugu.com/v1";    
+    //apiIugu = "/iugu";
+    api = "https://api.modazapp.online/api";
+    //api = "http://localhost:65417/api";
     
     constructor(public navCtrl: NavController, private http: HttpClient, private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController){
         this.form = new FormGroup({ Login: new FormControl(), Senha: new FormControl() });
@@ -25,8 +39,7 @@ export class LoginPage{
     Login(): void{
         this.showLoader();
 
-        this.http.post('https://api.modazapp.online/api/Login', this.form.value).subscribe(data =>{
-        //this.http.post('http://localhost:65417/api/Login', this.form.value).subscribe(data =>{
+        this.http.post(this.api + '/Login', this.form.value).subscribe(data =>{
             if(data != null){
                 if(data["Usuario"] != null){
                     this.token = data["Token"];
@@ -64,24 +77,14 @@ export class LoginPage{
         });
     }
 
-    cadastroIugu(){
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-        
+    cadastroIugu(){                
         var cliente = {
             email: localStorage.getItem('EmailUsuario'),
             name: localStorage.getItem('NomeUsuario'),
             cpf_cnpj: localStorage.getItem('CpfUsuario')
         };
 
-        this.http.post('/iugu/customers', cliente, httpOptions).subscribe(data => {
+        this.http.post(this.apiIugu + '/customers', cliente, httpOptions).subscribe(data => {
             console.log(data);
             localStorage.setItem('IdIugu', data['id']);
         }, (error) => {
@@ -90,17 +93,7 @@ export class LoginPage{
     }
 
     buscarClienteIugu(){
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Access-Control-Allow-Origin': 'http://localhost:8100',
-              'Access-Control-Allow-Methods': 'GET,POST,DELETE,PUT,OPTIONS',
-              'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, Origin, Accept',
-              'Authorization': 'Basic ODZlNDk1ZmJlYzEwYjUzMWE2MzljMmQyNDgwNTYwNjM6'
-            })
-        };
-
-        this.http.get('/iugu/customers?query=' + localStorage.getItem('EmailUsuario'), httpOptions).subscribe(data => {
+        this.http.get(this.apiIugu + '/customers?query=' + localStorage.getItem('EmailUsuario'), httpOptions).subscribe(data => {
             if(data["totalItems"] > 0){
                 localStorage.setItem('IdIugu', data['items'][0]['id']);
             }else{
@@ -113,8 +106,7 @@ export class LoginPage{
 
     getPedidos(){
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
-            this.http.get('https://api.modazapp.online/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{            
-            //this.http.get('http://localhost:65417/api/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{            
+            this.http.get(this.api + '/Pedidos/GetPedidosCliente?id=' + localStorage.getItem("IdUsuario")).subscribe(data =>{
                 this.pedidos = data;
                 localStorage.setItem('Pedidos', JSON.stringify(data));
             }, (error) =>{
@@ -130,8 +122,7 @@ export class LoginPage{
         if(this.email != "" && this.email != null){
             this.showLoading();
             
-            this.http.get('https://api.modazapp.online/api/Usuarios/EsqueceuSenha?id=' + this.email).subscribe(data => {
-            //this.http.get('http://localhost:65417/api/Usuarios/EsqueceuSenha?id=' + this.email).subscribe(data => {
+            this.http.get(this.api + '/Usuarios/EsqueceuSenha?id=' + this.email).subscribe(data => {
                 if(data["success"] == false){
                     this.showAlert("Erro!", data["message"]);
                     this.loading.dismiss();

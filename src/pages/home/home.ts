@@ -36,12 +36,14 @@ export class HomePage {
   conexao: boolean;
   rootPage: any;
   qtdLojasCidade: any = 0;
+  api = "https://api.modazapp.online/api";
+  //api = "http://localhost:65417/api";
     
   constructor(private geolocation: Geolocation, private network: Network, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider, public geocoder: NativeGeocoder,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
       this.showLoad = true;
       this.obterGeolocalizacao();
-      this.initializeItems();
+      // this.initializeItems();
       this.usuarioLogado = this.validaLogin();
 
       this.network.onDisconnect().subscribe(() => {
@@ -78,18 +80,12 @@ export class HomePage {
       this.showLoader();
 
     if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
-        this.http.get('https://api.modazapp.online/api/lojas').subscribe(data =>{
-        //this.http.get('http://localhost:65417/api/lojas').subscribe(data =>{
+        this.http.get(this.api + '/Lojas/GetLojasPelaCidade?cidade=' + this.cidade).subscribe(data =>{
           this.items = data;
+          
+          this.qtdLojasCidade = this.items.length;
 
           localStorage.setItem('Lojas', JSON.stringify(data));
-
-          this.items.forEach(element => {
-            if(element.Cidade == this.cidade){
-              this.qtdLojasCidade++;
-            }            
-          });
-
           this.loading.dismiss();
       }, (error) =>{
         this.showAlert('Erro', 'Falha na comunicação com o servidor');
@@ -98,14 +94,7 @@ export class HomePage {
     } else{
        this.items = JSON.parse(localStorage.getItem('Lojas'));
        this.loading.dismiss();
-     }
-    
-    // this.lojasProvider.getAll(this.searchText)
-    //   .then((result: any[]) => {
-    //     this.items = result;
-    //     localStorage.setItem('Lojas', JSON.stringify(result));
-    //     this.loading.dismiss();
-    // });
+    }
   }
 
   obterGeolocalizacao(){
@@ -113,20 +102,21 @@ export class HomePage {
       this.geocoder.reverseGeocode(data.coords.latitude, data.coords.longitude).then(result => {
         console.log(result);
       })
-      //this.obterCidade(data.coords.latitude, data.coords.longitude);
+      this.obterCidade(data.coords.latitude, data.coords.longitude);
     });
   }
 
   obterCidade(lat: any, long: any){
-    this.http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long).subscribe(data => {
-      console.log(data);
+    this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyCNn2lJChxvDkleHdqYUORmrSfIn_vkiVk').subscribe(data => {
       this.results = data;
-      this.cidade = this.results.results[0].address_components[2].short_name;
-      this.uf = this.results.results[0].address_components[4].short_name;
+      this.cidade = this.results.results[0].address_components[3].short_name;
+      this.uf = this.results.results[0].address_components[5].short_name;
       // this.cidade = this.results.results[1].address_components[4].short_name;
       // this.uf = this.results.results[1].address_components[6].short_name;
       localStorage.setItem('Cidade', this.cidade);
       localStorage.setItem('UF', this.uf);
+
+      this.initializeItems();
     })
   }
   
