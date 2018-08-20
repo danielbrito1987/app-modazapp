@@ -19,54 +19,58 @@
       </button> -->
     </ion-buttons>
   </ion-navbar>
-      <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar Produto"></ion-searchbar>
-    </ion-header>
+    <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar Produto"></ion-searchbar>
+</ion-header>
       
-      <ion-content>
-          <ion-fab right bottom *ngIf="validaLogin()">
-              <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
-              <ion-fab-list side="top">
-                  <button ion-fab [navPush]="carrinhoPage">
-                  <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
-                  <ion-label>Carrinho</ion-label>
-                  </button>
-                  <button ion-fab (click)="goPedidosPage();">
-                  <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
-                  <ion-label>Pedidos</ion-label>
-                  </button>
-                  <button ion-fab (click)="goCamera()">
-                  <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
-                  <ion-label>Comprovante</ion-label>
-                  </button>
-                  <button ion-fab (click)="logoff()">
-                  <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
-                  <ion-label>Sair</ion-label>
-                  </button>
-              </ion-fab-list>
-          </ion-fab>
-          <ion-refresher (ionRefresh)="doRefresh($event)">
-            <ion-refresher-content>
-                pullingIcon="arrow-dropdown"
-                pullingText="Puxe para atualizar"
-                refreshingSpinner="circles"
-                refreshingText="Atualizando...">
-            </ion-refresher-content>
-          </ion-refresher>
-      
-        <ion-card *ngFor="let item of items" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
-          <img *ngIf="item.Imagem.includes('data')" src="{{ item.Imagem }}" />
-          <img *ngIf="!item.Imagem.includes('data')" src="assets/imgs/{{ item.Imagem }}" />
-          <ion-item>
-            <ion-avatar item-start>
-              <img *ngIf="item.Logomarca.includes('data')" src="{{ item.Logomarca }}" />
-              <img *ngIf="!item.Logomarca.includes('data')" src="assets/imgs/{{ item.Logomarca }}" />
-            </ion-avatar>      
-            <ion-card-content style="padding: 0">
-              <h2>{{ item.Nome }}</h2>
-              <p>{{ item.Endereco }}</p>
-              <p>{{ item.Cidade }} - {{ item.Estado }}</p>
-              <p>{{ item.Telefone }}</p>
-            </ion-card-content>
-          </ion-item>
-        </ion-card>
-      </ion-content>
+<ion-content>
+    <ion-fab right bottom *ngIf="validaLogin()">
+        <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+        <ion-fab-list side="top">
+            <button ion-fab [navPush]="carrinhoPage">
+            <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            <ion-label>Carrinho</ion-label>
+            </button>
+            <button ion-fab (click)="goPedidosPage();">
+            <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
+            <ion-label>Pedidos</ion-label>
+            </button>
+            <button ion-fab (click)="goCamera()">
+            <ion-icon ios="ios-paper-plane" md="md-paper-plane"></ion-icon>
+            <ion-label>Comprovante</ion-label>
+            </button>
+            <button ion-fab (click)="logoff()">
+            <ion-icon ios="ios-close-circle" md="md-close-circle"></ion-icon>
+            <ion-label>Sair</ion-label>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content>
+          pullingIcon="arrow-dropdown"
+          pullingText="Puxe para atualizar"
+          refreshingSpinner="circles"
+          refreshingText="Atualizando...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+  <ion-row *ngFor="let lj of lojas">
+    <ion-card *ngFor="let item of lj" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
+      <img src="{{ item.Imagem }}" />
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="{{ item.Logomarca }}" />
+        </ion-avatar>      
+        <ion-card-content style="padding: 0">
+          <h2>{{ item.Nome }}</h2>
+          <p>{{ item.Endereco }}</p>
+          <p>{{ item.Cidade }} - {{ item.Estado }}</p>
+          <p>{{ item.Telefone }}</p>
+        </ion-card-content>
+      </ion-item>
+    </ion-card>
+  </ion-row>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

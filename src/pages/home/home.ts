@@ -12,7 +12,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
 import { LojasProvider } from '../../providers/lojas/lojas';
 import { ProdutoProvider } from '../../providers/produto/produto';
-import { Network } from '@ionic-native/network';
 import { Geolocation } from '@ionic-native/geolocation';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
 
@@ -25,7 +24,7 @@ export class HomePage {
   items: any;
   loading: any;
   public comprovante = "";
-  showLoad: boolean;  
+  showLoad: boolean = true;  
   lojas: any[] = [];
   searchText: string = null;
   usuarioLogado: boolean;
@@ -35,73 +34,45 @@ export class HomePage {
   uf: any = "";
   conexao: boolean;
   rootPage: any;
-  qtdLojasCidade: any = 0;
+  qtdLojasCidade: any = 1;
   api = "https://api.modazapp.online/api";
   //api = "http://localhost:65417/api";
     
-  constructor(private geolocation: Geolocation, private network: Network, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider, public geocoder: NativeGeocoder,
+  constructor(private geolocation: Geolocation, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider, public geocoder: NativeGeocoder,
     private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
-      this.showLoad = true;
       this.obterGeolocalizacao();
       // this.initializeItems();
       this.usuarioLogado = this.validaLogin();
-
-      this.network.onDisconnect().subscribe(() => {
-        if(this.network.type === 'wifi'){                    
-          this.conexao = false;
-        }
-
-        if(this.network.type === '3g'){
-          this.conexao = false;
-        }
-
-        if(this.network.type === '4g'){
-          this.conexao = false;
-        }
-      });
-
-      this.network.onConnect().subscribe(() => {
-        if(this.network.type === 'wifi'){
-          this.conexao = true;
-        }
-
-        if(this.network.type === '3g'){
-          this.conexao = true;
-        }
-
-        if(this.network.type === '4g'){
-          this.conexao = true;
-        }
-      });
   }  
   
   initializeItems(): void{
     if(this.showLoad)
       this.showLoader();
 
-    if(localStorage.getItem('Lojas') == "" || localStorage.getItem('Lojas') == null){
-        this.http.get(this.api + '/Lojas/GetLojasPelaCidade?cidade=' + this.cidade).subscribe(data =>{
-          this.items = data;
-          
-          this.qtdLojasCidade = this.items.length;
+    this.http.get(this.api + '/Lojas/GetLojasPelaCidade?cidade=' + this.cidade).subscribe(data =>{
+      this.items = data;
+      
+      this.qtdLojasCidade = this.items.length;
 
-          localStorage.setItem('Lojas', JSON.stringify(data));
-          this.loading.dismiss();
-      }, (error) =>{
-        this.showAlert('Erro', 'Falha na comunicação com o servidor');
+      localStorage.setItem('Lojas', JSON.stringify(data));
+
+      if(this.showLoad){
         this.loading.dismiss();
-      });
-    } else{
-       this.items = JSON.parse(localStorage.getItem('Lojas'));
-       this.loading.dismiss();
-    }
+        this.showLoad = false;
+      }
+    }, (error) =>{
+      if(this.showLoad)
+        this.showLoader();
+
+      this.showAlert('Erro', 'Falha na comunicação com o servidor');
+    });
   }
 
   obterGeolocalizacao(){
-    this.geolocation.getCurrentPosition().then((data) => {
-      this.geocoder.reverseGeocode(data.coords.latitude, data.coords.longitude).then(result => {
-        console.log(result);
-      })
+    this.geolocation.watchPosition().subscribe((data) => {
+      // this.geocoder.reverseGeocode(data.coords.latitude, data.coords.longitude).then(result => {
+      //   console.log(result);
+      // })
       this.obterCidade(data.coords.latitude, data.coords.longitude);
     });
   }
@@ -109,6 +80,7 @@ export class HomePage {
   obterCidade(lat: any, long: any){
     this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyCNn2lJChxvDkleHdqYUORmrSfIn_vkiVk').subscribe(data => {
       this.results = data;
+      
       this.cidade = this.results.results[0].address_components[3].short_name;
       this.uf = this.results.results[0].address_components[5].short_name;
       // this.cidade = this.results.results[1].address_components[4].short_name;
@@ -166,7 +138,7 @@ export class HomePage {
 
   goRootPage(): void{
     this.navCtrl.setRoot(HomePage);
-    this.navCtrl.popToRoot();
+    //this.navCtrl.popToRoot();
   }
 
   goCamera(){

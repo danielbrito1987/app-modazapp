@@ -62,7 +62,7 @@ export class PerfilPage{
         if(this.senha == this.confirmaSenha){
             this.showLoader();
             if(this.validaLogin()){
-                var dados = { 'IdUsuario': parseInt(localStorage.getItem("IdUsuario")), 'Nome': this.nomeUsuario, 'Email': this.emailusuario, 'CPF': this.cpfUsuario, 'DataNasc': this.dataNasc, 'Senha': this.senha };
+                var dados = { 'IdUsuario': parseInt(localStorage.getItem("IdUsuario")), 'Nome': this.nomeUsuario, 'Email': this.emailusuario, 'CPF': this.cpfUsuario, 'DataNasc': this.dataNasc, 'Senha': this.senha, 'Telefone': this.telefoneusuario };
 
                 this.http.post(this.api + "/Usuarios/AlterarPerfil", dados).subscribe(data => {
                     this.loading.dismiss();
@@ -72,6 +72,7 @@ export class PerfilPage{
                         this.emailusuario = data["Email"];
                         this.cpfUsuario = data["CPF"];
                         this.dataNasc = data["DataNasc"];
+                        this.telefoneusuario = data["Telefone"];
                     }else{
                         this.showAlert("Atenção", data["message"]);
                     }

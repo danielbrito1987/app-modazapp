@@ -16,12 +16,14 @@ import { Platform } from 'ionic-angular';
   templateUrl: 'contact.html'
 })
 export class ContactPage {
+  lojas: any[] = [];
   items: any;
   produtos: any;
   loading: any;
   public comprovante = "";
   showLoad: boolean;
   usuarioLogado: boolean;
+  page = 1;
   api = "https://api.modazapp.online/api";
   //api = "http://localhost:65417/api";
   
@@ -33,25 +35,36 @@ export class ContactPage {
   }  
   
   initializeItems(): void{
-    if(this.showLoad)
-      this.showLoader();
+    this.showLoader();
+    
+    this.http.get(this.api + '/Lojas/GetLojasPaginacao?paginaAtual=' + this.page).subscribe(data =>{
+      this.items = data;
+      this.page = this.page + 1;
 
-    this.items = JSON.parse(localStorage.getItem('Lojas'));
-    console.log(this.items);
+      this.lojas.push(this.items);
 
-    if(this.items == null || this.items == "" || this.items.length == 0){
-      this.http.get(this.api + '/lojas').subscribe(data =>{
-        this.items = data;     
-        localStorage.setItem('Lojas', JSON.stringify(data));
-        this.loading.dismiss();
-      }, (error) =>{
-        this.showAlert('Erro', 'Falha na comunicação com o servidor');
-        this.loading.dismiss();
-      });
-    }else{
-      this.items = JSON.parse(localStorage.getItem('Lojas'));
       this.loading.dismiss();
-    }
+    }, (error) =>{
+      console.log(error);
+      this.showAlert('Erro', 'Falha na comunicação com o servidor');
+      this.loading.dismiss();
+    });
+  }
+
+  doInfinite(infiniteScroll){
+    setTimeout(() => {
+        this.http.get(this.api + '/Lojas/GetLojasPaginacao?paginaAtual=' + this.page).subscribe(data =>{
+            this.items = data;
+            this.page = this.page + 1;
+
+            this.lojas.push(this.items);                                   
+        }, (error) =>{
+            this.showAlert('Erro', 'Falha na comunicação com o servidor.');
+            this.goRootPage();
+        });
+
+        infiniteScroll.complete();
+    }, 2000);
   }
 
   showLoader(){    
