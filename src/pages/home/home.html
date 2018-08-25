@@ -54,7 +54,8 @@
     </ion-refresher>
 
   <div padding *ngIf="qtdLojasCidade <= 0">
-    <p text-center><strong>Que Pena! Nenhuma loja encontrada para a sua localidade. Em breve terá!</strong></p>
+    <img src="./assets/imgs/OPS.png" text-center />
+    <!-- <p text-center><strong>Que Pena! Nenhuma loja encontrada para a sua localidade. Em breve terá!</strong></p> -->
   </div>
   <div *ngFor="let item of items">
     <!-- <ion-card *ngIf="item.Cidade === cidade" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">     -->      

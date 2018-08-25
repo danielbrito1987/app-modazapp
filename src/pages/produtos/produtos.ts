@@ -52,6 +52,8 @@ export class ProdutosPage{
                 this.page = this.page + 1;
 
                 this.produtos.push(this.items);
+
+                console.log(this.produtos);
                                 
                 this.loading.dismiss();
             }, (error) =>{
@@ -68,16 +70,14 @@ export class ProdutosPage{
                 this.page = this.page + 1;
 
                 this.produtos.push(this.items);
-                                                
-                this.loading.dismiss();
+
+                infiniteScroll.complete();
             }, (error) =>{
                 this.showAlert('Erro', 'Falha na comunicação com o servidor.');
                 this.loading.dismiss();
                 this.goRootPage();
             });
-
-            infiniteScroll.complete();
-        }, 2000);
+        });
     }
 
     getItems(ev:any){

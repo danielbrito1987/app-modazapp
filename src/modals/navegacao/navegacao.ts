@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TabsPage } from '../../pages/tabs/tabs';
 import { NavController, NavParams } from 'ionic-angular';
 
 @Component({
@@ -14,11 +13,12 @@ export class ModalNavegacao{
 
     alterarNavegacao(tipo: any){
         localStorage.setItem('Navegacao', tipo);
-        this.goRootPage();
+        //this.goRootPage();
+        this.dismiss();
     }
 
     goRootPage(): void{
-        this.navCtrl.setRoot(TabsPage);
+        //this.navCtrl.setRoot(TabsPage);
         this.navCtrl.pop();
     }
 
@@ -27,7 +27,6 @@ export class ModalNavegacao{
     }
 
     validaChamada(){
-        console.log(this.tipoChamada);
         if(this.tipoChamada == 'inicio'){
           return false;
         }else{

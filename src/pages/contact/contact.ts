@@ -24,7 +24,8 @@ export class ContactPage {
   showLoad: boolean;
   usuarioLogado: boolean;
   page = 1;
-  api = "https://api.modazapp.online/api";
+  isLoadingMore = false;
+  api = "https://api.modazapp.online/api";  
   //api = "http://localhost:65417/api";
   
   constructor(public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform,
@@ -52,19 +53,25 @@ export class ContactPage {
   }
 
   doInfinite(infiniteScroll){
+    if(this.isLoadingMore)
+      return;
+
+    this.isLoadingMore = true;
+
     setTimeout(() => {
         this.http.get(this.api + '/Lojas/GetLojasPaginacao?paginaAtual=' + this.page).subscribe(data =>{
             this.items = data;
             this.page = this.page + 1;
 
-            this.lojas.push(this.items);                                   
+            this.lojas.push(this.items);
+
+            infiniteScroll.complete();
+            this.isLoadingMore = false;
         }, (error) =>{
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
             this.goRootPage();
         });
-
-        infiniteScroll.complete();
-    }, 2000);
+    });
   }
 
   showLoader(){    

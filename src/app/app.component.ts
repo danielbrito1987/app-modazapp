@@ -18,11 +18,12 @@ import { ModalNavegacao } from '../modals/navegacao/navegacao';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = TabsPage;
+  rootPage:any;
   dataRegistroCarrinho: any;
   versao: any = "1.0.1.3";
   usuarioLogado: boolean;
   nomeUsuario: any = "Bem Vindo!";
+  navegacao: string;
   @ViewChild(Nav) nav: Nav;
 
   constructor(private modalCtrl: ModalController, private appVersion: AppVersion, private oneSignal: OneSignal, public menuCtrl: MenuController, public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation) {
@@ -33,7 +34,10 @@ export class MyApp {
         splashScreen.hide();
       }, 500);
 
-      localStorage.clear();
+      this.navegacao = localStorage.getItem('Navegacao');
+
+      localStorage.setItem('Cidade', '');
+      localStorage.setItem('UF', '');
             
       statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#11856E');
@@ -56,14 +60,18 @@ export class MyApp {
         this.usuarioLogado = this.validaLogin();
       }, 1000);
       
-      this.openHomePage(splashScreen);
+      //this.openHomePage(splashScreen);
 
-      if(localStorage.getItem('Navegacao') == null || localStorage.getItem('Navegacao') == "" || localStorage.getItem('Navegacao') == undefined)
+      if(localStorage.getItem('Navegacao') == null || localStorage.getItem('Navegacao') == "" || localStorage.getItem('Navegacao') == undefined){
+        this.rootPage = ModalNavegacao;
         this.openModalNavegacao('inicio');
+      }else{
+        this.rootPage = TabsPage;
+      }
     });
   }
 
-  private openHomePage(splashScreen: SplashScreen) {    
+  private openHomePage(splashScreen: SplashScreen) {
     this.rootPage = TabsPage;
   }
 
@@ -91,6 +99,10 @@ export class MyApp {
     let modal = this.modalCtrl.create(ModalNavegacao, { Origem: origem });
     setTimeout(() => {
       modal.present();
+    });
+
+    modal.onDidDismiss(() => {
+      this.rootPage = TabsPage;
     });
   }
 

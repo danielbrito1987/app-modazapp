@@ -10,7 +10,6 @@ import { FeedbackPage } from '../feedback/feedback';
 import { PerfilPage } from '../perfil/perfil';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
-import { LojasProvider } from '../../providers/lojas/lojas';
 import { ProdutoProvider } from '../../providers/produto/produto';
 import { Geolocation } from '@ionic-native/geolocation';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
@@ -35,19 +34,22 @@ export class HomePage {
   conexao: boolean;
   rootPage: any;
   qtdLojasCidade: any = 1;
+  cidadeAnterior: any;
   api = "https://api.modazapp.online/api";
   //api = "http://localhost:65417/api";
     
-  constructor(private geolocation: Geolocation, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public lojasProvider: LojasProvider, public geocoder: NativeGeocoder,
-    private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {
-      this.obterGeolocalizacao();
-      // this.initializeItems();
-      this.usuarioLogado = this.validaLogin();
+  constructor(private geolocation: Geolocation, public navCtrl: NavController, private http: HttpClient, public location: Location, public platform: Platform, public geocoder: NativeGeocoder,
+    private loadingCtrl: LoadingController, public toastCtrl: ToastController, public alertCtrl: AlertController, public statusBar: StatusBar, public produtosProvider: ProdutoProvider) {      
+      console.log(localStorage.getItem('Navegacao'));
+      if(localStorage.getItem('Navegacao') != "" && localStorage.getItem('Navegacao') != null && localStorage.getItem('Navegacao') != undefined){
+        this.obterGeolocalizacao();
+        // this.initializeItems();      
+        this.usuarioLogado = this.validaLogin();
+      }
   }  
   
   initializeItems(): void{
-    if(this.showLoad)
-      this.showLoader();
+    this.showLoader();
 
     this.http.get(this.api + '/Lojas/GetLojasPelaCidade?cidade=' + this.cidade).subscribe(data =>{
       this.items = data;
@@ -56,14 +58,21 @@ export class HomePage {
 
       localStorage.setItem('Lojas', JSON.stringify(data));
 
-      if(this.showLoad){
-        this.loading.dismiss();
-        this.showLoad = false;
-      }
+      this.loading.dismiss();
     }, (error) =>{
-      if(this.showLoad)
-        this.showLoader();
+      this.showAlert('Erro', 'Falha na comunicação com o servidor');
+      this.loading.dismiss();
+    });
+  }
 
+  initializeItemsLocalizaao(): void{
+    this.http.get(this.api + '/Lojas/GetLojasPelaCidade?cidade=' + this.cidade).subscribe(data =>{
+      this.items = data;
+      
+      this.qtdLojasCidade = this.items.length;
+
+      //localStorage.setItem('Lojas', JSON.stringify(data));
+    }, (error) =>{
       this.showAlert('Erro', 'Falha na comunicação com o servidor');
     });
   }
@@ -73,22 +82,26 @@ export class HomePage {
       // this.geocoder.reverseGeocode(data.coords.latitude, data.coords.longitude).then(result => {
       //   console.log(result);
       // })
+      //if(this.latAnterior != data.coords.latitude && this.longAnterior != data.coords.longitude)
       this.obterCidade(data.coords.latitude, data.coords.longitude);
     });
   }
 
   obterCidade(lat: any, long: any){
+    this.cidadeAnterior = localStorage.getItem("Cidade");
+
     this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyCNn2lJChxvDkleHdqYUORmrSfIn_vkiVk').subscribe(data => {
       this.results = data;
-      
-      this.cidade = this.results.results[0].address_components[3].short_name;
-      this.uf = this.results.results[0].address_components[5].short_name;
+
+      this.cidade = this.results.results[2].address_components[0].short_name;
+      this.uf = this.results.results[2].address_components[1].short_name;
       // this.cidade = this.results.results[1].address_components[4].short_name;
       // this.uf = this.results.results[1].address_components[6].short_name;
       localStorage.setItem('Cidade', this.cidade);
       localStorage.setItem('UF', this.uf);
 
-      this.initializeItems();
+      if(this.cidadeAnterior != this.cidade)
+        this.initializeItemsLocalizaao();
     })
   }
   

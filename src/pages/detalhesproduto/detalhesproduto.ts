@@ -99,7 +99,12 @@ export class DetalhesProdutoPage{
         this.http.get(this.api + '/produto/GetProdutoId?id=' + this.idProduto).subscribe(data =>{
             this.items = data;
             localStorage.setItem('DescricaoProduto', data[0]['Descricao']);
-            this.valorProduto = parseFloat(data[0]['Valor']);
+
+            if(this.navegacao == "Varejo")
+                this.valorProduto = parseFloat(data[0]['Valor']);
+            else if(this.navegacao == "Atacado")
+                this.valorProduto = parseFloat(data[0]['ValorAtacado']);
+            
             this.estoque = data[0].Estoque.split(',');
 
             this.estoque.forEach(element => {            

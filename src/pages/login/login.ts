@@ -49,6 +49,8 @@ export class LoginPage{
                     localStorage.setItem('NomeUsuario', data['Usuario']);
                     localStorage.setItem('CpfUsuario', data['CPF']);
                     localStorage.setItem('EmailUsuario', data['Email']);
+                    localStorage.setItem('Cidade', '');
+                    localStorage.setItem('UF', '');
                     this.getPedidos();             
                     this.goRootPage();                    
                     this.showToast('top', 'Bem vindo ' + data["Usuario"] + '!');   
