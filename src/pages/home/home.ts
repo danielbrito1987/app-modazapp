@@ -35,6 +35,7 @@ export class HomePage {
   rootPage: any;
   qtdLojasCidade: any = 1;
   cidadeAnterior: any;
+  procurando = true;
   api = "https://api.modazapp.online/api";
   //api = "http://localhost:65417/api";
     
@@ -59,6 +60,7 @@ export class HomePage {
       localStorage.setItem('Lojas', JSON.stringify(data));
 
       this.loading.dismiss();
+      this.procurando = false;
     }, (error) =>{
       this.showAlert('Erro', 'Falha na comunicação com o servidor');
       this.loading.dismiss();
@@ -71,6 +73,7 @@ export class HomePage {
       
       this.qtdLojasCidade = this.items.length;
 
+      this.procurando = false;
       //localStorage.setItem('Lojas', JSON.stringify(data));
     }, (error) =>{
       this.showAlert('Erro', 'Falha na comunicação com o servidor');

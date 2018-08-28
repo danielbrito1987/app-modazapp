@@ -36,6 +36,12 @@ export class MyApp {
 
       this.navegacao = localStorage.getItem('Navegacao');
 
+      localStorage.setItem('tokenLogin', '');
+      localStorage.setItem('IdUsuario', '');
+      localStorage.setItem('EmailUsuario', '');
+      localStorage.setItem('NomeUsuario', '');
+      localStorage.setItem('TipoUsuario', '');
+      localStorage.setItem('Pedidos', '');
       localStorage.setItem('Cidade', '');
       localStorage.setItem('UF', '');
             

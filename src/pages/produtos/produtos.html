@@ -9,11 +9,6 @@
           <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
         </button>      
       </ion-buttons>
-      <ion-buttons end>
-        <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-            <ion-icon ios="ios-person" md="md-person"></ion-icon>
-        </button>
-      </ion-buttons>
     </ion-navbar>
     <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>
   </ion-header>
@@ -66,7 +61,7 @@
         </ion-row>
     </ion-grid>
   
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="50%">
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="99%">
       <ion-infinite-scroll-content loadingSpinner="none"></ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </ion-content>

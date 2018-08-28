@@ -54,6 +54,7 @@ import { TooltipsModule } from 'ionic-tooltips';
 import { Geolocation } from '@ionic-native/geolocation';
 import { OneSignal } from '@ionic-native/onesignal';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
+import { SocialSharing } from '@ionic-native/social-sharing';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -140,7 +141,8 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
     ScreenOrientation,
     Geolocation,
     OneSignal,
-    NativeGeocoder
+    NativeGeocoder,
+    SocialSharing
   ]
 })
 export class AppModule {

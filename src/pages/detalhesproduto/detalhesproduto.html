@@ -10,8 +10,8 @@
             </button>      
         </ion-buttons>
         <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
+            <button ion-button icon-only color="secondary" (click)="compartilharProduto()">
+                <ion-icon ios="ios-share" md="md-share"></ion-icon>
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -52,9 +52,9 @@
     <ion-list inset>
         <ion-card *ngFor="let item of items">
             <ion-slides pager loop=true>
-                <ion-slide *ngIf="item.Imagem != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Imagem }}" class="slide-image" /></ion-slide>
-                <ion-slide *ngIf="item.Slide2 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide2 }}" class="slide-image" /></ion-slide>
-                <ion-slide *ngIf="item.Slide3 != null"><img style="max-width:100%;" src="https://api.modazapp.online/Content/imagens/{{ item.IdLoja }}/{{ item.Slide3 }}" class="slide-image" /></ion-slide>
+                <ion-slide *ngIf="item.Imagem != null"><img style="max-width:100%;" src="{{ item.Imagem }}" class="slide-image" /></ion-slide>
+                <ion-slide *ngIf="item.Slide2 != null"><img style="max-width:100%;" src="{{ item.Slide2 }}" class="slide-image" /></ion-slide>
+                <ion-slide *ngIf="item.Slide3 != null"><img style="max-width:100%;" src="{{ item.Slide3 }}" class="slide-image" /></ion-slide>
             </ion-slides>
             <!-- <img src="{{ item.Imagem }}" /> -->
             <ion-card-content>
