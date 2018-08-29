@@ -13,6 +13,7 @@ import { EnderecosPage } from '../pages/enderecos/enderecos';
 import { PagamentoPage } from '../pages/pagamento/pagamento';
 import { LoginPage } from '../pages/login/login';
 import { ModalNavegacao } from '../modals/navegacao/navegacao';
+import { ImageLoaderConfig } from 'ionic-image-loader';
 
 @Component({
   templateUrl: 'app.html'
@@ -26,13 +27,17 @@ export class MyApp {
   navegacao: string;
   @ViewChild(Nav) nav: Nav;
 
-  constructor(private modalCtrl: ModalController, private appVersion: AppVersion, private oneSignal: OneSignal, public menuCtrl: MenuController, public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation) {
+  constructor(private modalCtrl: ModalController, private appVersion: AppVersion, private oneSignal: OneSignal, public menuCtrl: MenuController, public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation, private imageLoaderConfig: ImageLoaderConfig) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       setTimeout(function(){
         splashScreen.hide();
       }, 500);
+
+      this.imageLoaderConfig.enableFallbackAsPlaceholder(true);
+      this.imageLoaderConfig.enableSpinner(true);
+      this.imageLoaderConfig.setFallbackUrl("https://api.modazapp.online/Content/imagens/SemImagem.png");
 
       this.navegacao = localStorage.getItem('Navegacao');
 

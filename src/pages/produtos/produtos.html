@@ -48,9 +48,7 @@
       <ion-row *ngFor="let prod of produtos">
           <ion-col col-6 *ngFor="let item of prod" style="padding:1px;">
             <ion-card (click)="goDetalhes(item.IdProduto)">
-              <ion-thumbnail>
-                <img src="{{ item.Imagem }}" />      
-              </ion-thumbnail>
+              <img-loader src="https://api.modazapp.online/Content/imagens/{{ idLoja }}/{{ item.Imagem }}" useImg></img-loader>
               <ion-card-content>
                 <h3>{{ item.Descricao }}</h3>            
                 <h5 item-start><strong>R$ {{ item.Valor | number : '1.2-2' }}</strong></h5>

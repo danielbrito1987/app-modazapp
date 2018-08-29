@@ -52,8 +52,6 @@ export class ProdutosPage{
                 this.page = this.page + 1;
 
                 this.produtos.push(this.items);
-
-                console.log(this.produtos);
                                 
                 this.loading.dismiss();
             }, (error) =>{

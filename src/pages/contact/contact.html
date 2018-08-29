@@ -55,7 +55,7 @@
 
   <ion-row *ngFor="let lj of lojas">
     <ion-card *ngFor="let item of lj" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
-      <img src="{{ item.Imagem }}" />
+      <img-loader src="https://api.modazapp.online/Content/imagens/Lojas/{{ item.Imagem }}" useImg></img-loader>
       <ion-item>
         <ion-avatar item-start>
           <img src="{{ item.Logomarca }}" />

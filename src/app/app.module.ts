@@ -55,6 +55,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { OneSignal } from '@ionic-native/onesignal';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { IonicImageLoader } from 'ionic-image-loader';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -90,6 +91,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
     FormsModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
+    IonicImageLoader.forRoot(),
     BrMaskerModule,
     TooltipsModule
     ///BrowserAnimationsModule
