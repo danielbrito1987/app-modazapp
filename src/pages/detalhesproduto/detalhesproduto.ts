@@ -198,16 +198,17 @@ export class DetalhesProdutoPage{
         });
 
         //this.valorProduto = parseFloat(this.valorProduto.toString().replace('.', ',')) * this.totalQtd;
+
+        var vlrProd = this.valorProduto.toFixed(2).replace('.', '');
         
-        var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja, 'QtdPedido': JSON.stringify(qtd) };
-        var vlrProd = this.valorProduto.toString().replace('.', '');
-        
+        var dados = { 'IdProduto': idProduto, 'Usuario': localStorage.getItem("tokenLogin"), "CodPedido": localStorage.getItem("CodPedido"), 'Tamanho': this.tam, 'IdLoja': this.idLoja, 'QtdPedido': JSON.stringify(qtd), 'ValorProduto': this.valorProduto.toFixed(2) };
+                
         if(localStorage.getItem('ItemIUGU') == "" || localStorage.getItem('ItemIUGU') == null){
-            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd + '0') });
+            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd) });
             localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
         }else{
             this.carrinho = JSON.parse(localStorage.getItem('ItemIUGU'));
-            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd + '0') });
+            this.carrinho.push({ 'description': localStorage.getItem('DescricaoProduto'), 'quantity': this.totalQtd, 'price_cents': parseFloat(vlrProd) });
             localStorage.setItem('ItemIUGU', JSON.stringify(this.carrinho));
         }
 

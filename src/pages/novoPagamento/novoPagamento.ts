@@ -83,7 +83,7 @@ export class NovoPagamentoPage {
             }
         };
 
-        if(this.id != ""){
+        if(this.id != "" && this.id != undefined){
             this.http.put(this.apiIugu + '/customers/' + localStorage.getItem('IdIugu') + '/payment_methods/' + this.id, httpOptions).subscribe(data => {
                 this.showAlert('Sucesso', 'Forma de Pagamento alterada com sucesso.');
                 this.loading.dismiss();
@@ -91,10 +91,13 @@ export class NovoPagamentoPage {
                 console.log(error);
             });
         }else{
-            this.http.post('/iugu/payment_token', dados, httpOptions).subscribe(data => {
+            this.http.post(this.apiIugu + '/payment_token', dados, httpOptions).subscribe(data => {
                 this.criarMetodoPagamento(data['id']);
             }, (error) => {
                 console.log(error);
+                
+                if(error.status == 422)
+                    this.showAlert('Erro', 'Dados incorretos, por favor verifique.');
             });
         }
 

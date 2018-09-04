@@ -21,7 +21,11 @@ export class EnderecosPage{
 
     constructor(public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController){
-            this.initializeItems();
+            
+    }
+
+    ionViewDidEnter(){
+        this.initializeItems();
     }
 
     initializeItems(){

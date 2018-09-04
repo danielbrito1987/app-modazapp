@@ -39,7 +39,7 @@ export class NovoEnderecoPage {
             this.getItems();
         }
     }
-
+    
     getItems(){
         this.showLoader();
 

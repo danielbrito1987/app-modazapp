@@ -29,6 +29,7 @@ export class ProdutosPage{
     tipoUsuario: any;
     page = 1;
     errorMessage: string;
+    navegacao: string;
     api = "https://api.modazapp.online/api";
     //api = "http://localhost:65417/api";
 
@@ -37,7 +38,8 @@ export class ProdutosPage{
             this.tam = "P";
             this.showLoad = true;
             this.idLoja = this.navParams.get('IdLoja');
-            this.tipoUsuario = localStorage.getItem('TipoUsuario');            
+            this.tipoUsuario = localStorage.getItem('TipoUsuario');
+            this.navegacao = localStorage.getItem('Navegacao');
 
             this.initializeItems();
             this.usuarioLogado = this.validaLogin();

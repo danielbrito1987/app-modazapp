@@ -50,8 +50,9 @@
             <ion-card (click)="goDetalhes(item.IdProduto)">
               <img-loader src="https://api.modazapp.online/Content/imagens/{{ idLoja }}/{{ item.Imagem }}" useImg></img-loader>
               <ion-card-content>
-                <h3>{{ item.Descricao }}</h3>            
-                <h5 item-start><strong>R$ {{ item.Valor | number : '1.2-2' }}</strong></h5>
+                <h3>{{ item.Descricao }}</h3>
+                <h5 *ngIf="navegacao === 'Varejo'" item-start><strong>R$ {{ item.Valor | number : '1.2-2' }}</strong></h5>
+                <h5 *ngIf="navegacao === 'Atacado'" item-start><strong>R$ {{ item.ValorAtacado | number : '1.2-2' }}</strong></h5>
                 <!-- <h3 text-center *ngIf="item.TotalEstoque <= 0">Produto sem Estoque!</h3> -->            
               </ion-card-content>
             </ion-card>

@@ -51,7 +51,7 @@ export class CarrinhoPage{
                     localStorage.setItem('Carrinho', JSON.stringify(data));
 
                     this.qtdItems.forEach(element => {
-                        var valor = element.valorTotal.toString().replace('.', '') + '0';
+                        var valor = parseFloat(element.valorProduto).toFixed(2).replace('.', '');
                         var qtd = element.valorTotal / element.valorProduto;
                         this.carrinhoIugu.push({ 'description': element.descProduto, 'quantity': qtd, 'price_cents': valor });
                     });

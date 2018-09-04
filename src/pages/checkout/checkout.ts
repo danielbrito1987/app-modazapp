@@ -140,11 +140,7 @@ export class CheckoutPage{
     finalizar(){
         this.dtVcto.setDate(this.data.getDate() + 30);
         this.itemsIugu = JSON.parse(localStorage.getItem('ItemIUGU'));
-
-        this.itemsIugu.forEach(element => {
-            this.totalPedido += element.price_cents;
-        })
-          
+                  
         this.showLoader();
         
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){            

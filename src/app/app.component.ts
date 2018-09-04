@@ -36,11 +36,16 @@ export class MyApp {
       }, 500);
 
       this.imageLoaderConfig.enableFallbackAsPlaceholder(true);
-      this.imageLoaderConfig.enableSpinner(true);
+      this.imageLoaderConfig.spinnerEnabled = true;
+      this.imageLoaderConfig.setSpinnerName('bubbles');
+      this.imageLoaderConfig.setSpinnerColor('secondary');
       this.imageLoaderConfig.setFallbackUrl("https://api.modazapp.online/Content/imagens/SemImagem.png");
+      this.imageLoaderConfig.maxCacheAge = 60 * 1000;
 
       this.navegacao = localStorage.getItem('Navegacao');
 
+      localStorage.setItem('ItemIUGU', '');
+      localStorage.setItem('Carrinho', '');
       localStorage.setItem('tokenLogin', '');
       localStorage.setItem('IdUsuario', '');
       localStorage.setItem('EmailUsuario', '');
