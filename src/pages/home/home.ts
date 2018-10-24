@@ -12,7 +12,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
 import { ProdutoProvider } from '../../providers/produto/produto';
 import { Geolocation } from '@ionic-native/geolocation';
-import { NativeGeocoder } from '@ionic-native/native-geocoder';
+import { NativeGeocoder, NativeGeocoderReverseResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder';
 
 @Component({
   selector: 'page-home',
@@ -91,13 +91,32 @@ export class HomePage {
   }
 
   obterCidade(lat: any, long: any){
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
     this.cidadeAnterior = localStorage.getItem("Cidade");
+
+    this.geocoder.reverseGeocode(lat, long, options).then((result: NativeGeocoderReverseResult[]) => {
+      this.cidade = result[2].subAdministrativeArea;
+      this.uf = result[2].administrativeArea;
+
+      localStorage.setItem('Cidade', this.cidade);
+      localStorage.setItem('UF', this.uf);
+
+      if(this.cidadeAnterior != this.cidade)
+        this.initializeItemsLocalizaao();
+    });
+
+    /*this.cidadeAnterior = localStorage.getItem("Cidade");
 
     this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyCNn2lJChxvDkleHdqYUORmrSfIn_vkiVk').subscribe(data => {
       this.results = data;
+      console.log(data);
 
-      this.cidade = this.results.results[2].address_components[0].short_name;
-      this.uf = this.results.results[2].address_components[1].short_name;
+      this.cidade = this.results.results[3].address_components[3].short_name;
+      this.uf = this.results.results[3].address_components[4].short_name;
       // this.cidade = this.results.results[1].address_components[4].short_name;
       // this.uf = this.results.results[1].address_components[6].short_name;
       localStorage.setItem('Cidade', this.cidade);
@@ -105,7 +124,7 @@ export class HomePage {
 
       if(this.cidadeAnterior != this.cidade)
         this.initializeItemsLocalizaao();
-    })
+    })*/
   }
   
   showLoader(){    

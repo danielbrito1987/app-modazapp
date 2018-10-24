@@ -62,7 +62,9 @@ export class CheckoutPage{
             this.cep = "";
             this.formaPgto = "";
             this.usuarioLogado = this.validaLogin();
-            this.subTotal = navParams.get('TotalPedido');            
+            this.subTotal = navParams.get('TotalPedido');
+            this.frete = this.subTotal * 0.01
+            this.frete = navParams.get('Frete');
             this.totalPedido = this.subTotal + this.frete;
 
             this.getMetodoPgto();
@@ -106,7 +108,7 @@ export class CheckoutPage{
             console.error(error);
         })
     }
-
+    
     showModalEndereco(){
         let modal = this.modalCtrl.create(ModalEndereco);
         setTimeout(() => {

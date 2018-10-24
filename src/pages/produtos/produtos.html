@@ -7,7 +7,10 @@
       <ion-buttons end>
         <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
           <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-        </button>      
+        </button>  
+        <button *ngIf="usuarioLogado" ion-button icon-only color="secondary" (click)="goCarrinhoPage()">
+          <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+        </button>    
       </ion-buttons>
     </ion-navbar>
     <ion-searchbar (ionInput)="getItems($event)" placeholder="Pesquisar"></ion-searchbar>

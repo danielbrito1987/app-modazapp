@@ -12,6 +12,7 @@ import { FeedbackPage } from '../feedback/feedback';
 })
 export class DetalhesPedidoPage{
     public carrinhoPage = CarrinhoPage;
+    produtos: any[] = [];
     items: any;
     lojas: any;
     loading: any;
@@ -19,14 +20,20 @@ export class DetalhesPedidoPage{
     teste: any;
     usuarioLogado: boolean;
     qtdPedido: any[];
+    totalLoja: any;
+    frete: any;
+    freteArray: any[];
     api = "https://api.modazapp.online/api";
     //api = "http://localhost:65417/api";
 
     constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, public navParams: NavParams,
         private http: HttpClient, public toastCtrl: ToastController, public alertCtrl: AlertController){
+            this.totalLoja = 0;
+            this.frete = 0;
             this.codPedido = this.navParams.get('CodPedido');
             this.initializeItems();
-            this.usuarioLogado = this.validaLogin();                  
+            this.usuarioLogado = this.validaLogin();
+            this.freteArray = [];
     }
 
     initializeItems(){
@@ -39,8 +46,14 @@ export class DetalhesPedidoPage{
         if(localStorage.getItem('tokenLogin') != null && localStorage.getItem('tokenLogin') != ''){
             this.http.get(this.api + '/Pedidos/GetItemPedido?id=' + JSON.stringify(dados)).subscribe(data =>{
                 this.items = data;
-                console.log(this.items);
+                this.produtos = this.items;
                 this.qtdPedido = data[0].QtdPedido.split(',');
+                
+                this.produtos.forEach(element => {
+                    this.totalLoja += element.ValorTotal;
+                });
+
+                this.frete += ((this.totalLoja * 0.01) > 5 ? this.totalLoja * 0.01 : 5);
 
                 this.loading.dismiss();
             }, (error) =>{
@@ -56,6 +69,9 @@ export class DetalhesPedidoPage{
     getPedidosPorLoja(){
         this.http.get(this.api + '/Pedidos/GetPedidosLoja?id=' + this.codPedido).subscribe(data => {
             this.lojas = data;
+            this.lojas.forEach(element => {
+                this.freteArray.push(element.NomeLoja + "|" + element.Frete + ";");
+            });
         }, (error) =>{
             this.showAlert('Erro', 'Falha na comunicação com o servidor.');
             this.loading.dismiss();
@@ -76,7 +92,26 @@ export class DetalhesPedidoPage{
             total = 0;
         }
 
-        return total;
+        return total + this.frete;
+    }
+
+    calculoFrete(): any {
+        var total = 0;
+        var frete = 0;
+        this.teste = <any[]>this.lojas;
+
+        if(this.teste) {
+            this.teste.forEach(element => {
+                total += element.Frete < 5 ? 5 : element.Frete;
+            });
+            frete = total;
+        } else {
+            frete = 0;
+        }
+
+        this.frete = frete;
+        
+        return frete;
     }
 
     goLoginPage(){

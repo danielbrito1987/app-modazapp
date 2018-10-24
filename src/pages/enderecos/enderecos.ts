@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, NavParams, ToastController } from 'ionic-angular';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LoginPage } from '../login/login';
 import { CarrinhoPage } from '../carrinho/carrinho';
 import { PedidosPage } from '../pedidos/pedidos';

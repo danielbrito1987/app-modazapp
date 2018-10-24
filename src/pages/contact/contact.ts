@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, ToastController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Camera } from '@ionic-native/camera';
 import { LoginPage } from '../login/login';
 import { ProdutosPage } from '../produtos/produtos';
 import { CarrinhoPage } from '../carrinho/carrinho';
@@ -10,6 +10,7 @@ import { PedidosPage } from '../pedidos/pedidos';
 import { HomePage } from '../home/home';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
+import { FeedbackPage } from '../feedback/feedback';
 
 @Component({
   selector: 'page-contact',
@@ -119,24 +120,7 @@ export class ContactPage {
   }
 
   goCamera(){
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
-      // sourceType: this.camera.PictureSourceType.CAMERA,
-      // correctOrientation: true
-    }
-    
-    this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64:
-     let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.comprovante = base64Image;
-    }, (err) => {
-     // Handle error
-     console.log(err);
-    });
+    this.navCtrl.push(FeedbackPage);
   }
 
   validaLogin(){

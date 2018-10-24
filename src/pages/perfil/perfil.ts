@@ -3,6 +3,7 @@ import { NavController, AlertController, LoadingController, NavParams, ToastCont
 import { HttpClient } from '@angular/common/http';
 import { LoginPage } from '../login/login';
 import { HomePage } from '../home/home';
+import { CarrinhoPage } from '../carrinho/carrinho';
 
 @Component({
     selector: "page-perfil",
@@ -96,6 +97,10 @@ export class PerfilPage{
 
     goLoginPage(){
         this.navCtrl.push(LoginPage);
+    }
+
+    goCarrinhoPage(){
+        this.navCtrl.push(CarrinhoPage);
     }
 
     goRootPage(): void{

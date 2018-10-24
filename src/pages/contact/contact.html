@@ -14,6 +14,9 @@
       <button *ngIf="usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
         <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
       </button>
+      <button *ngIf="usuarioLogado" ion-button icon-only color="secondary" (click)="goCarrinhoPage()">
+        <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+      </button>
       <!-- <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
           <ion-icon ios="ios-person" md="md-person"></ion-icon>
       </button> -->
@@ -26,10 +29,10 @@
     <ion-fab right bottom *ngIf="validaLogin()">
         <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
         <ion-fab-list side="top">
-            <button ion-fab [navPush]="carrinhoPage">
+            <!--<button ion-fab [navPush]="goCarrinhoPage()">
             <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
             <ion-label>Carrinho</ion-label>
-            </button>
+            </button>-->
             <button ion-fab (click)="goPedidosPage();">
             <ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon>
             <ion-label>Pedidos</ion-label>
@@ -53,8 +56,8 @@
       </ion-refresher-content>
     </ion-refresher>
 
-  <ion-row *ngFor="let lj of lojas">
-    <ion-card *ngFor="let item of lj" id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
+  <div *ngFor="let item of items">
+    <ion-card id="{{ item.IdLoja }}" (click)="goProdutos(item.IdLoja);">
       <img-loader src="https://api.modazapp.online/Content/imagens/Lojas/{{ item.Imagem }}" useImg></img-loader>
       <ion-item>
         <ion-avatar item-start>
@@ -68,9 +71,9 @@
         </ion-card-content>
       </ion-item>
     </ion-card>
-  </ion-row>
+  </div>
 
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="99%">
+  <!--<ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="99%">
     <ion-infinite-scroll-content loadingSpinner="none"></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll>-->
 </ion-content>

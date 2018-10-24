@@ -8,6 +8,9 @@
             <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
                 <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
             </button>      
+            <button *ngIf="usuarioLogado" ion-button icon-only color="secondary" (click)="goCarrinhoPage()">
+                <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            </button>
         </ion-buttons>
         <!-- <ion-buttons end>
             <button ion-button icon-only color="secondary" (click)="compartilharProduto()">
@@ -91,7 +94,7 @@
                 </ion-row>
             </ion-grid>
 
-            <div id="div{{ est.tamanho }}" style="display:none" *ngFor="let est of qtdPedido">
+            <div padding id="div{{ est.tamanho }}" style="display:none" *ngFor="let est of qtdPedido">
                 <ion-item padding>
                     <ion-label color="secondary" style="color: #1ABC9C;" stacked>Qtd. {{ est.tamanho }}</ion-label>
                     <ion-input [(ngModel)]="est.qtd" [ngModelOptions]="{standalone: true}" type="tel" placeholder="Quantidade"></ion-input>
@@ -105,7 +108,7 @@
             </ion-row> -->
             <ion-row style="padding-top:10px;">
                 <ion-col>
-                <button ion-button icon-left small (click)="comprar(item.IdProduto)">
+                <button ion-button icon-left small block (click)="comprar(item.IdProduto)">
                     <ion-icon name="md-cart" color="secondary"></ion-icon>
                     <div><p color="secondary">Comprar</p></div>
                 </button>                      

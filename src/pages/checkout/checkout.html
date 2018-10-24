@@ -7,12 +7,10 @@
         <ion-buttons end>
             <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
                 <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-            </button>      
-        </ion-buttons>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
-            </button>
+            </button> 
+            <button *ngIf="usuarioLogado" ion-button icon-only color="secondary" (click)="goCarrinhoPage()">
+                <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            </button>     
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -21,7 +19,7 @@
     <ion-fab right bottom *ngIf="validaLogin()">
         <button ion-fab mini color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
         <ion-fab-list side="top">
-          <button ion-fab [navPush]="carrinhoPage">
+          <button ion-fab (click)="goCarrinhoPage()">
             <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
             <ion-label>Carrinho</ion-label>
           </button>

@@ -1,5 +1,6 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
 import { NavController, NavParams, Content, ToastController, Platform } from 'ionic-angular';
+import { CarrinhoPage } from '../carrinho/carrinho';
 
 declare var require: any;
 
@@ -160,6 +161,10 @@ export class ChatPage {
         });
     
         toast.present(toast);
+    }
+
+    goCarrinhoPage(){
+        this.navCtrl.push(CarrinhoPage);
     }
 
 }

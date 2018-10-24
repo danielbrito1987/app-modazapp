@@ -28,21 +28,12 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   constructor(private modalCtrl: ModalController, private appVersion: AppVersion, private oneSignal: OneSignal, public menuCtrl: MenuController, public platform: Platform, public http: HttpClient, public statusBar: StatusBar, public splashScreen: SplashScreen, public alertCtrl: AlertController, public toastCtrl: ToastController, public backgroundMode: BackgroundMode, public screen: ScreenOrientation, private imageLoaderConfig: ImageLoaderConfig) {
-    platform.ready().then(() => {
+    platform.ready().then(() => {      
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       setTimeout(function(){
         splashScreen.hide();
       }, 500);
-
-      this.imageLoaderConfig.enableFallbackAsPlaceholder(true);
-      this.imageLoaderConfig.spinnerEnabled = true;
-      this.imageLoaderConfig.setSpinnerName('bubbles');
-      this.imageLoaderConfig.setSpinnerColor('secondary');
-      this.imageLoaderConfig.setFallbackUrl("https://api.modazapp.online/Content/imagens/SemImagem.png");
-      this.imageLoaderConfig.maxCacheAge = 60 * 1000;
-
-      this.navegacao = localStorage.getItem('Navegacao');
 
       localStorage.setItem('ItemIUGU', '');
       localStorage.setItem('Carrinho', '');
@@ -54,7 +45,16 @@ export class MyApp {
       localStorage.setItem('Pedidos', '');
       localStorage.setItem('Cidade', '');
       localStorage.setItem('UF', '');
-            
+      
+      this.imageLoaderConfig.enableFallbackAsPlaceholder(true);
+      this.imageLoaderConfig.spinnerEnabled = true;
+      this.imageLoaderConfig.setSpinnerName('bubbles');
+      this.imageLoaderConfig.setSpinnerColor('secondary');
+      this.imageLoaderConfig.setFallbackUrl("https://api.modazapp.online/Content/imagens/SemImagem.png");
+      this.imageLoaderConfig.maxCacheAge = 60 * 1000;
+
+      this.navegacao = localStorage.getItem('Navegacao');
+                  
       statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#11856E');
 
@@ -63,6 +63,14 @@ export class MyApp {
       this.oneSignal.getIds().then(data => {
         localStorage.setItem('PlayerId', data.userId);
       })
+
+      /*this.oneSignal.handleNotificationReceived().subscribe((notificacao) => {
+        var obj = { "IdUsuario": localStorage.getItem("IdUsuario"), "Titulo": notificacao.payload.title, "Mensagem": notificacao.payload.body };
+
+        this.http.post("https://api.modazapp.online/api/Notificacoes/PostNotificacao", obj).subscribe((data) => {
+
+        });
+      });*/
             
       this.oneSignal.endInit();
 
@@ -87,9 +95,9 @@ export class MyApp {
     });
   }
 
-  private openHomePage(splashScreen: SplashScreen) {
+  /*private openHomePage(splashScreen: SplashScreen) {
     this.rootPage = TabsPage;
-  }
+  }*/
 
   openPerfilPage(){
     this.nav.push(PerfilPage);

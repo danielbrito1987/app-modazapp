@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController, ToastController, AlertController } from 'ionic-angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
-import { HomePage } from '../home/home';
+//import { HomePage } from '../home/home';
 import { CadastroPage } from '../cadastro/cadastro';
 import { TabsPage } from '../tabs/tabs';
 

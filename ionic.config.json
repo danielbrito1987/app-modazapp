@@ -1,14 +1,14 @@
 {
   "name": "modazapp",
-  "app_id": "",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
   },
+  "type": "ionic-angular",
   "proxies": [
     {
       "path": "/iugu",
       "proxyUrl": "https://api.iugu.com/v1/"
     }
-  ]
+  ],
+  "app_id": ""
 }

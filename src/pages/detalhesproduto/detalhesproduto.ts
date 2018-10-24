@@ -8,9 +8,9 @@ import { HomePage } from '../home/home';
 import { FeedbackPage } from '../feedback/feedback';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { EspecificacaoProdutoPage } from '../especicifacaoproduto/especificacaoproduto';
-import { OneSignal } from '@ionic-native/onesignal';
+//import { OneSignal } from '@ionic-native/onesignal';
 import { SocialSharing } from '@ionic-native/social-sharing';
-import * as moment from 'moment';
+//import * as moment from 'moment';
 import * as $ from 'jquery';
 
 @Component({
@@ -42,7 +42,7 @@ export class DetalhesProdutoPage{
     api = "https://api.modazapp.online/api";
     //api = "http://localhost:65417/api";
 
-    constructor(private socialSharing: SocialSharing, private oneSignal: OneSignal, public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
+    constructor(private socialSharing: SocialSharing, public platform: Platform, public navCtrl: NavController, private http: HttpClient, public loadingCtrl: LoadingController,
         public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController, private localNotification: LocalNotifications){
             this.tam = "P";
             this.showLoad = true;
@@ -50,7 +50,7 @@ export class DetalhesProdutoPage{
             this.usuarioLogado = this.validaLogin();
             this.tipoUsuario = localStorage.getItem('TipoUsuario');
             this.navegacao = localStorage.getItem('Navegacao');
-            this.esconderDiv = false;            
+            this.esconderDiv = false;
             this.initializeItems();
     }
 

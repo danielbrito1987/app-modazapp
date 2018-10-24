@@ -7,12 +7,10 @@
         <ion-buttons end>
             <button *ngIf="this.usuarioLogado === false" ion-button icon-only color="secondary" (click)="goLoginPage();">
                 <ion-icon ios="ios-lock" md="md-lock"></ion-icon>
-            </button>      
-        </ion-buttons>
-        <ion-buttons end>
-            <button *ngIf="this.usuarioLogado === true" ion-button icon-only color="secondary" (click)="goPerfilPage();">
-                <ion-icon ios="ios-person" md="md-person"></ion-icon>
-            </button>
+            </button> 
+            <button *ngIf="usuarioLogado" ion-button icon-only color="secondary" (click)="goCarrinhoPage()">
+                <ion-icon ios="ios-cart" md="md-cart"></ion-icon>
+            </button>     
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -45,7 +43,7 @@
     <ion-card *ngFor="let item2 of lojas">
         <ion-item-divider color="light">           
             <ion-row>
-                <ion-col>{{ item2.nomeLoja }}</ion-col>
+                <ion-col>{{ item2.NomeLoja }}</ion-col>
                 <ion-col>
                     <ion-badge *ngIf="item2.status == 'Aberto'" color="warning"> {{ item2.status }} </ion-badge>
                     <ion-badge *ngIf="item2.status == 'Concluído'" color="secondary"> {{ item2.status }} </ion-badge>
@@ -63,7 +61,7 @@
             </ion-row>     
         </ion-item-divider>
         <ion-item-group *ngFor="let item of items">                
-            <ion-item *ngIf="item.IdLoja == item2.idLoja">                    
+            <ion-item *ngIf="item.IdLoja == item2.IdLoja">                    
                 <ion-row>
                     <ion-col><h2>{{ item.DescProduto }}</h2></ion-col>
                     <ion-col>
@@ -83,10 +81,21 @@
                         <p>Total: {{ item.ValorTotal | number : '1.2-2' }}</p>
                     </ion-col>
                 </ion-row>
-            </ion-item>
+            </ion-item>            
         </ion-item-group>
+        <ion-row>
+            <ion-col>
+                <p>Total: {{ item2.ValorTotal | number: '1.2-2' }}</p>
+            </ion-col>
+        </ion-row>
     </ion-card>
     <ion-card>
+        <ion-item-divider color="light">
+            <ion-row>Resumo do Pedido</ion-row>
+        </ion-item-divider>
+        <ion-item>
+            <h2>Frete: R$ {{ calculoFrete() | number: '1.2-2' }}</h2>
+        </ion-item>
         <ion-item>
             <h2>Total do Pedido: {{ valorTotal() | number : '1.2-2' }}</h2>
         </ion-item>
